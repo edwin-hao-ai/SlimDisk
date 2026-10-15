@@ -146,7 +146,7 @@ const overviewEnvelope = (processes: OverviewProcess[] = [plainProcess]) => ({
 describe("ScanView event lifecycle", () => {
   beforeEach(() => {
     localStorage.clear();
-    localStorage.setItem("slimdisk.welcome.seen", "true");
+    localStorage.setItem("macslim.welcome.seen", "true");
     mocks.listen.mockReset();
     mocks.scanAll.mockReset();
     mocks.prepareOperation.mockReset();
@@ -202,7 +202,7 @@ describe("ScanView event lifecycle", () => {
 describe("ScanView broker flow", () => {
   beforeEach(() => {
     localStorage.clear();
-    localStorage.setItem("slimdisk.welcome.seen", "true");
+    localStorage.setItem("macslim.welcome.seen", "true");
     mocks.listen.mockReset();
     mocks.listen.mockResolvedValue(() => Promise.resolve());
     mocks.scanAll.mockReset();

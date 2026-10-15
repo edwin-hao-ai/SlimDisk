@@ -55,7 +55,7 @@ import { useI18n, getT, paramsToRecord } from "@/i18n";
 
 function isNotifyEnabled(): boolean {
   try {
-    const raw = localStorage.getItem("slimdisk.prefs.v1");
+    const raw = localStorage.getItem("macslim.prefs.v1");
     if (!raw) return true;
     const p = JSON.parse(raw);
     return p?.notifyOnCleanComplete !== false;
