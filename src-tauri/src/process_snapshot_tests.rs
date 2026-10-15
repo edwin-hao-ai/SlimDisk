@@ -250,7 +250,7 @@ fn our_own_executable_path_is_recoverable() {
         "可执行路径应当是绝对路径，实际：{exe}"
     );
     assert!(
-        exe.contains("macslim"),
+        exe.contains("slimdisk"),
         "可执行路径应当指向测试二进制，实际：{exe}"
     );
 }

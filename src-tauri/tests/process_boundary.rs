@@ -1,7 +1,7 @@
 //! 进程域 crate 边界的**编译级**回归测试。
 //!
 //! 本文件是一个独立 crate，和 `src/bin/cli.rs` 站在同一边：它只能看见
-//! `macslim_lib` 里 `pub` 的东西。所以「公共面恰好等于 CLI 需要的 DTO 集合」
+//! `slimdisk_lib` 里 `pub` 的东西。所以「公共面恰好等于 CLI 需要的 DTO 集合」
 //! 这件事由本文件能否编译来强制：
 //!
 //! * 把 `ProcessKillReport` / `ProcessKillDetail` 挪回 `process_ops`（变成
@@ -11,10 +11,10 @@
 //!   可执行目标，必须同时被类型边界和门禁两侧夹住）。
 //!
 //! 本文件不含任何真实动作：只构造 DTO、读字段、断言序列化和默认值。
-use macslim_lib::operations::{
+use slimdisk_lib::operations::{
     OperationKind, PreparedOperation, ProcessKillDetail, ProcessKillReport, ProcessMode,
 };
-use macslim_lib::user_error::UserError;
+use slimdisk_lib::user_error::UserError;
 
 #[test]
 fn public_process_report_dto_is_constructible_and_readable() {

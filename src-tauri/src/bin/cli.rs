@@ -1,28 +1,28 @@
-//! MacSlim CLI —— 与桌面端共享核心逻辑
+//! SlimDisk CLI —— 与桌面端共享核心逻辑
 //!
 //! 当前补齐的命令：
-//!   macslim-cli --scan
-//!   macslim-cli --cache
-//!   macslim-cli --disk
-//!   macslim-cli --npm
-//!   macslim-cli --xcode
-//!   macslim-cli --process [--scan]
-//!   macslim-cli --list
-//!   macslim-cli --docker [--scan]
-//!   macslim-cli --history
-//!   macslim-cli --whitelist list
-//!   macslim-cli --whitelist add <kind> <value> [note]
-//!   macslim-cli --whitelist remove <id>
+//!   slimdisk-cli --scan
+//!   slimdisk-cli --cache
+//!   slimdisk-cli --disk
+//!   slimdisk-cli --npm
+//!   slimdisk-cli --xcode
+//!   slimdisk-cli --process [--scan]
+//!   slimdisk-cli --list
+//!   slimdisk-cli --docker [--scan]
+//!   slimdisk-cli --history
+//!   slimdisk-cli --whitelist list
+//!   slimdisk-cli --whitelist add <kind> <value> [note]
+//!   slimdisk-cli --whitelist remove <id>
 
-use macslim_lib::cache_cleaner::CleanSummary;
-use macslim_lib::cache_scanner::CacheCategory;
-use macslim_lib::cli_operations::{
+use slimdisk_lib::cache_cleaner::CleanSummary;
+use slimdisk_lib::cache_scanner::CacheCategory;
+use slimdisk_lib::cli_operations::{
     CacheCleanOutcome, CacheScope, ProcessCleanOutcome, ProcessScanView,
 };
-use macslim_lib::operations::ProcessKillReport;
-use macslim_lib::scanner::Risk;
-use macslim_lib::storage::{HistoryEntry, Storage};
-use macslim_lib::{run_tauri, scanner_read_health};
+use slimdisk_lib::operations::ProcessKillReport;
+use slimdisk_lib::scanner::Risk;
+use slimdisk_lib::storage::{HistoryEntry, Storage};
+use slimdisk_lib::{run_tauri, scanner_read_health};
 use std::env;
 
 enum Command {
@@ -71,7 +71,7 @@ fn main() {
 
     match command {
         Command::Help => print_help(),
-        Command::Version => println!("macslim-cli {}", env!("CARGO_PKG_VERSION")),
+        Command::Version => println!("slimdisk-cli {}", env!("CARGO_PKG_VERSION")),
         Command::Scan => run_cache_scan(CacheFilter::All, false),
         Command::Cache => run_cache_scan(CacheFilter::All, true),
         Command::Disk { scan_only } => run_cache_scan(CacheFilter::All, !scan_only),
@@ -155,37 +155,37 @@ fn parse_whitelist_args(args: &[String]) -> Result<Command, String> {
 
 fn print_help() {
     println!(
-        r#"MacSlim CLI {}
+        r#"SlimDisk CLI {}
 
 用法:
-  macslim-cli              打开桌面应用（无参数）
-  macslim-cli --scan       扫描全部缓存项，不执行清理
-  macslim-cli --cache      清理默认选中的缓存项
-  macslim-cli --disk       清理默认选中的硬盘类缓存项
-  macslim-cli --disk --scan
+  slimdisk-cli              打开桌面应用（无参数）
+  slimdisk-cli --scan       扫描全部缓存项，不执行清理
+  slimdisk-cli --cache      清理默认选中的缓存项
+  slimdisk-cli --disk       清理默认选中的硬盘类缓存项
+  slimdisk-cli --disk --scan
                            仅扫描硬盘类缓存项
-  macslim-cli --npm        仅扫描/清理 Node 生态缓存（NPM/PNPM/Yarn/node_modules）
-  macslim-cli --npm --scan
+  slimdisk-cli --npm        仅扫描/清理 Node 生态缓存（NPM/PNPM/Yarn/node_modules）
+  slimdisk-cli --npm --scan
                            仅扫描 Node 生态缓存
-  macslim-cli --xcode      仅扫描/清理 Xcode 缓存
-  macslim-cli --xcode --scan
+  slimdisk-cli --xcode      仅扫描/清理 Xcode 缓存
+  slimdisk-cli --xcode --scan
                            仅扫描 Xcode 缓存
-  macslim-cli --process    扫描并清理默认选中的进程项
-  macslim-cli --process --scan
+  slimdisk-cli --process    扫描并清理默认选中的进程项
+  slimdisk-cli --process --scan
                            仅扫描进程项
-  macslim-cli --list       列出所有可优化进程（等价于 --process --scan）
-  macslim-cli --docker     扫描并清理默认选中的 Docker 项
-  macslim-cli --docker --scan
+  slimdisk-cli --list       列出所有可优化进程（等价于 --process --scan）
+  slimdisk-cli --docker     扫描并清理默认选中的 Docker 项
+  slimdisk-cli --docker --scan
                            仅扫描 Docker 项
-  macslim-cli --history    查看最近清理历史
-  macslim-cli --whitelist list
+  slimdisk-cli --history    查看最近清理历史
+  slimdisk-cli --whitelist list
                            查看白名单
-  macslim-cli --whitelist add <kind> <value> [note]
+  slimdisk-cli --whitelist add <kind> <value> [note]
                            添加白名单（kind 通常为 process）
-  macslim-cli --whitelist remove <id>
+  slimdisk-cli --whitelist remove <id>
                            删除白名单
-  macslim-cli --version    显示版本
-  macslim-cli --help       显示帮助"#,
+  slimdisk-cli --version    显示版本
+  slimdisk-cli --help       显示帮助"#,
         env!("CARGO_PKG_VERSION")
     );
 }
@@ -212,11 +212,11 @@ impl CacheFilter {
 fn cache_outcome(filter: &CacheFilter, clean: bool) -> CacheCleanOutcome {
     let rt = tokio::runtime::Runtime::new().expect("tokio runtime");
     let result = if clean {
-        rt.block_on(macslim_lib::cli_operations::run_default_cache_clean(
+        rt.block_on(slimdisk_lib::cli_operations::run_default_cache_clean(
             filter.scope(),
         ))
     } else {
-        rt.block_on(macslim_lib::cli_operations::scan_cache(filter.scope()))
+        rt.block_on(slimdisk_lib::cli_operations::scan_cache(filter.scope()))
             .map(|scan| CacheCleanOutcome {
                 summary: CleanSummary {
                     reports: Vec::new(),
@@ -283,7 +283,7 @@ fn run_cache_scan(filter: CacheFilter, clean: bool) {
     }
 }
 
-fn print_cache_items(items: &[macslim_lib::cache_scanner::CacheItem]) {
+fn print_cache_items(items: &[slimdisk_lib::cache_scanner::CacheItem]) {
     let total_gb =
         items.iter().map(|item| item.size_bytes).sum::<u64>() as f64 / 1024.0 / 1024.0 / 1024.0;
     println!("发现 {} 项，共计 {:.2} GB", items.len(), total_gb);
@@ -309,14 +309,14 @@ fn print_cache_items(items: &[macslim_lib::cache_scanner::CacheItem]) {
 fn process_outcome(scan_only: bool) -> ProcessCleanOutcome {
     let rt = tokio::runtime::Runtime::new().expect("tokio runtime");
     let result = if scan_only {
-        rt.block_on(macslim_lib::cli_operations::scan_processes())
+        rt.block_on(slimdisk_lib::cli_operations::scan_processes())
             .map(|scan| ProcessCleanOutcome {
                 default_safe_count: 0,
                 report: ProcessKillReport::default(),
                 scan,
             })
     } else {
-        rt.block_on(macslim_lib::cli_operations::run_default_process_clean())
+        rt.block_on(slimdisk_lib::cli_operations::run_default_process_clean())
     };
     match result {
         Ok(outcome) => outcome,
@@ -460,7 +460,7 @@ fn run_history() {
 }
 
 fn print_header() {
-    println!("MacSlim CLI v{}", env!("CARGO_PKG_VERSION"));
+    println!("SlimDisk CLI v{}", env!("CARGO_PKG_VERSION"));
     println!("==========================================");
 }
 
@@ -501,11 +501,11 @@ fn print_history_entries(entries: &[HistoryEntry]) {
     }
 }
 
-fn safety_label(safety: &macslim_lib::cache_scanner::Safety) -> &'static str {
+fn safety_label(safety: &slimdisk_lib::cache_scanner::Safety) -> &'static str {
     match safety {
-        macslim_lib::cache_scanner::Safety::Safe => "安全",
-        macslim_lib::cache_scanner::Safety::Low => "低风险",
-        macslim_lib::cache_scanner::Safety::Medium => "谨慎",
+        slimdisk_lib::cache_scanner::Safety::Safe => "安全",
+        slimdisk_lib::cache_scanner::Safety::Low => "低风险",
+        slimdisk_lib::cache_scanner::Safety::Medium => "谨慎",
     }
 }
 
@@ -565,8 +565,8 @@ fn risk_label(risk: &Risk) -> &'static str {
 #[cfg(test)]
 mod cli_args_tests {
     use super::{parse_args, CacheFilter, Command, WhitelistCommand};
-    use macslim_lib::cache_scanner::CacheCategory;
-    use macslim_lib::cli_operations::CacheScope;
+    use slimdisk_lib::cache_scanner::CacheCategory;
+    use slimdisk_lib::cli_operations::CacheScope;
 
     fn arg(value: &str) -> Vec<String> {
         vec![value.to_owned()]

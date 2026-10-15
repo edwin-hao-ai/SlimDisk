@@ -492,7 +492,7 @@ def _cli_bypass_errors(source: str) -> list[str]:
 
 def _cli_library_modules(masked: str) -> set[str]:
     modules = set()
-    for match in re.finditer(r"\bmacslim_lib\b\s*::\s*", masked):
+    for match in re.finditer(r"\bslimdisk_lib\b\s*::\s*", masked):
         head = re.match(r"[A-Za-z_][A-Za-z0-9_]*", masked[match.end() :])
         if head is not None:
             modules.add(head.group(0))
@@ -508,7 +508,7 @@ def _cli_library_errors(source: str) -> list[str]:
     ]
     modules = _cli_library_modules(masked)
     errors.extend(
-        f"bin/cli.rs 依赖了未授权的 macslim_lib 模块 {module}，"
+        f"bin/cli.rs 依赖了未授权的 slimdisk_lib 模块 {module}，"
         f"CLI 可用的库模块只能是 {sorted(ALLOWED_CLI_LIB_MODULES)}"
         for module in sorted(modules - ALLOWED_CLI_LIB_MODULES)
     )

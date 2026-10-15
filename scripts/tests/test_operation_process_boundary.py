@@ -15,8 +15,8 @@ except ModuleNotFoundError: from operation_contract_support import MODULE, REPOS
 
 RAW_CLI_PROBE = """
 fn probe_boundary() {
-    let target = macslim_lib::operations::ProcessTarget {
-        identity: macslim_lib::operations::ProcessIdentity {
+    let target = slimdisk_lib::operations::ProcessTarget {
+        identity: slimdisk_lib::operations::ProcessIdentity {
             pid: 1,
             name: String::new(),
             exe: String::new(),
@@ -25,8 +25,8 @@ fn probe_boundary() {
         protected: false,
         whitelisted: false,
     };
-    let mut signaller = macslim_lib::process_ops::SystemProcessSignaller;
-    signaller.terminate_all(&[target], macslim_lib::operations::ProcessMode::Force);
+    let mut signaller = slimdisk_lib::process_ops::SystemProcessSignaller;
+    signaller.terminate_all(&[target], slimdisk_lib::operations::ProcessMode::Force);
 }
 """
 
@@ -113,8 +113,8 @@ class ProcessBoundaryTests(unittest.TestCase):
     def test_rejects_a_cli_that_imports_the_process_ops_module(self):
         sources = self.sources()
         sources["cli_rs"] = sources["cli_rs"].replace(
-            "use macslim_lib::operations::ProcessKillReport;",
-            "use macslim_lib::process_ops::ProcessKillReport;",
+            "use slimdisk_lib::operations::ProcessKillReport;",
+            "use slimdisk_lib::process_ops::ProcessKillReport;",
         )
         self.assertBoundaryFails(sources, "cli.rs", "process_ops")
 
@@ -126,8 +126,8 @@ class ProcessBoundaryTests(unittest.TestCase):
     def test_rejects_a_cli_that_renames_the_signaller_alias(self):
         sources = self.sources()
         sources["cli_rs"] = sources["cli_rs"].replace(
-            "use macslim_lib::operations::ProcessKillReport;",
-            "use macslim_lib::process_ops::{\n"
+            "use slimdisk_lib::operations::ProcessKillReport;",
+            "use slimdisk_lib::process_ops::{\n"
             "    ProcessKillReport, SystemProcessSignaller as Signaller,\n"
             "};",
         )
@@ -138,14 +138,14 @@ class ProcessBoundaryTests(unittest.TestCase):
         sources["cli_rs"] = sources["cli_rs"].replace(
             "fn risk_label(risk: &Risk) -> &'static str {",
             "fn stop_pid(pid: u32) {\n"
-            "    let _ = macslim_lib::cli_operations::scan_processes();\n"
+            "    let _ = slimdisk_lib::cli_operations::scan_processes();\n"
             "    let _ = pid;\n"
             "}\n\n"
             "fn risk_label(risk: &Risk) -> &'static str {",
         )
         sources["cli_rs"] = sources["cli_rs"].replace(
-            "use macslim_lib::operations::ProcessKillReport;",
-            "use macslim_lib::process_ops::ProcessKillReport;",
+            "use slimdisk_lib::operations::ProcessKillReport;",
+            "use slimdisk_lib::process_ops::ProcessKillReport;",
         )
         self.assertBoundaryFails(sources, "cli.rs", "process_ops")
 
@@ -161,25 +161,25 @@ class ProcessBoundaryTests(unittest.TestCase):
     def test_ignores_a_comment_that_only_mentions_process_ops(self):
         sources = self.sources()
         sources["cli_rs"] = sources["cli_rs"].replace(
-            "use macslim_lib::operations::ProcessKillReport;",
+            "use slimdisk_lib::operations::ProcessKillReport;",
             "// 不得再从 process_ops 引入可执行能力\n"
-            "use macslim_lib::operations::ProcessKillReport;",
+            "use slimdisk_lib::operations::ProcessKillReport;",
         )
         self.assertEqual(self.boundary_errors(sources), [])
 
     def test_rejects_a_cli_that_imports_a_crate_private_graceful_kill(self):
         sources = self.sources()
         sources["cli_rs"] = sources["cli_rs"].replace(
-            "use macslim_lib::operations::ProcessKillReport;",
-            "use macslim_lib::process_ops::graceful_kill;",
+            "use slimdisk_lib::operations::ProcessKillReport;",
+            "use slimdisk_lib::process_ops::graceful_kill;",
         )
         self.assertBoundaryFails(sources, "cli.rs", "process_ops")
 
     def test_rejects_a_cli_that_reaches_an_unapproved_library_module(self):
         sources = self.sources()
         sources["cli_rs"] = sources["cli_rs"].replace(
-            "use macslim_lib::scanner::Risk;",
-            "use macslim_lib::uninstaller::SystemUninstaller;",
+            "use slimdisk_lib::scanner::Risk;",
+            "use slimdisk_lib::uninstaller::SystemUninstaller;",
         )
         self.assertBoundaryFails(sources, "uninstaller", "未授权")
 
@@ -195,8 +195,8 @@ class ProcessBoundaryTests(unittest.TestCase):
         sources["cli_rs"] = sources["cli_rs"].replace(
             "fn risk_label(risk: &Risk) -> &'static str {",
             "fn sweep() {\n"
-            "    let mut inventory = macslim_lib::docker::DockerInventory::default();\n"
-            "    let _ = macslim_lib::docker::prune_all(&mut inventory);\n"
+            "    let mut inventory = slimdisk_lib::docker::DockerInventory::default();\n"
+            "    let _ = slimdisk_lib::docker::prune_all(&mut inventory);\n"
             "}\n\n"
             "fn risk_label(risk: &Risk) -> &'static str {",
         )
@@ -208,8 +208,8 @@ class ProcessBoundaryTests(unittest.TestCase):
     def test_rejects_a_cli_that_reimports_a_real_raw_function_by_another_name(self):
         sources = self.sources()
         sources["cli_rs"] = sources["cli_rs"].replace(
-            "use macslim_lib::operations::ProcessKillReport;",
-            "use macslim_lib::uninstaller::uninstall_app as remove_bundle;",
+            "use slimdisk_lib::operations::ProcessKillReport;",
+            "use slimdisk_lib::uninstaller::uninstall_app as remove_bundle;",
         )
         errors = MODULE.validate_cli_operation_surface(sources["cli_rs"])
         joined = " ".join(errors)

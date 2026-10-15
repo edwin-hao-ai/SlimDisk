@@ -2203,38 +2203,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "macslim"
-version = "1.0.1"
-dependencies = [
- "base64 0.22.1",
- "chrono",
- "dirs 5.0.1",
- "getrandom 0.2.17",
- "libc",
- "nix 0.29.0",
- "objc2",
- "plist",
- "rayon",
- "rusqlite",
- "serde",
- "serde_json",
- "sysinfo",
- "tauri",
- "tauri-build",
- "tauri-plugin-autostart",
- "tauri-plugin-notification",
- "tauri-plugin-opener",
- "tauri-plugin-os",
- "tauri-plugin-process",
- "tauri-plugin-shell",
- "tauri-plugin-updater",
- "thiserror 2.0.18",
- "tokio",
- "walkdir",
- "which",
-]
-
-[[package]]
 name = "markup5ever"
 version = "0.39.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3760,6 +3728,38 @@ name = "slab"
 version = "0.4.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c790de23124f9ab44544d7ac05d60440adc586479ce501c1d6d7da3cd8c9cf5"
+
+[[package]]
+name = "slimdisk"
+version = "1.0.1"
+dependencies = [
+ "base64 0.22.1",
+ "chrono",
+ "dirs 5.0.1",
+ "getrandom 0.2.17",
+ "libc",
+ "nix 0.29.0",
+ "objc2",
+ "plist",
+ "rayon",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "sysinfo",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-autostart",
+ "tauri-plugin-notification",
+ "tauri-plugin-opener",
+ "tauri-plugin-os",
+ "tauri-plugin-process",
+ "tauri-plugin-shell",
+ "tauri-plugin-updater",
+ "thiserror 2.0.18",
+ "tokio",
+ "walkdir",
+ "which",
+]
 
 [[package]]
 name = "smallvec"

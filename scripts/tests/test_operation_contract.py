@@ -246,8 +246,8 @@ class CliSurfaceTests(unittest.TestCase):
 
     def test_rejects_a_migration_bridge_import(self):
         source = self.cli().replace(
-            "use macslim_lib::scanner::Risk;",
-            "use macslim_lib::process_ops::graceful_kill;\nuse macslim_lib::scanner::Risk;",
+            "use slimdisk_lib::scanner::Risk;",
+            "use slimdisk_lib::process_ops::graceful_kill;\nuse slimdisk_lib::scanner::Risk;",
         )
         errors = MODULE.validate_cli_operation_surface(source)
         self.assertTrue(mark_anything(errors, "graceful_kill"), errors)
