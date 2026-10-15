@@ -35,7 +35,7 @@ import { playCleanSuccessSound } from "@/lib/cleanFeedback";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { useI18n } from "@/i18n";
 
-const WELCOME_SEEN_KEY = "macslim.welcome.seen";
+const WELCOME_SEEN_KEY = "slimdisk.welcome.seen";
 
 const ScanView: Component = () => {
   const { t, tText } = useI18n();

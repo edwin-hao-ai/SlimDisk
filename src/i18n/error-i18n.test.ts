@@ -159,7 +159,7 @@ const EQUIVALENCE: ReadonlyArray<{ old: string; code: string }> = [
   { old: "已终止", code: "kill_terminated" },
   { old: "进程已不存在", code: "kill_already_gone" },
   {
-    old: "权限不足（通常是 root 或系统进程，MacSlim 不应该看到这类进程）",
+    old: "权限不足（通常是 root 或系统进程，SlimDisk 不应该看到这类进程）",
     code: "kill_permission_denied",
   },
   {

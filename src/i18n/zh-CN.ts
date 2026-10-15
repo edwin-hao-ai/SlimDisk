@@ -1,8 +1,8 @@
-// 中文（简体）翻译 —— MacSlim 的默认文案源
+// 中文（简体）翻译 —— SlimDisk 的默认文案源
 export const zhCN = {
   // 通用
   common: {
-    appName: "MacSlim",
+    appName: "SlimDisk",
     tagline: "Mac 一键优化",
     scan: "扫描",
     rescan: "重新扫描",
@@ -44,7 +44,7 @@ export const zhCN = {
 
   // 欢迎页
   welcome: {
-    title: "欢迎使用 MacSlim",
+    title: "欢迎使用 SlimDisk",
     subtitle: "Mac 专属的一键式系统运维工具。\n清理冗余进程和开发缓存，让 Mac 保持轻快。",
     featureProcessTitle: "进程优化",
     featureProcessDesc: "识别残留、重复、高占用进程",
@@ -288,7 +288,7 @@ export const zhCN = {
       "操作执行失败，且历史记录也没写成（{operation} · {target}）：{failure}，请到历史页核对",
     kill_already_gone: "进程已不存在",
     kill_failed: "失败：{reason}",
-    kill_permission_denied: "权限不足（通常是 root 或系统进程，MacSlim 不应该看到这类进程）",
+    kill_permission_denied: "权限不足（通常是 root 或系统进程，SlimDisk 不应该看到这类进程）",
     kill_respawned:
       "原进程已终止，但一个 supervisor 立刻以新 PID {new_pid} 重启了 {name}。请从上游启动器（launchd agent / pm2 / nvm / Cursor / VS Code 等）停止，或把此进程名加入白名单屏蔽显示。",
     kill_still_alive: "SIGKILL 已发送，但系统报告进程仍存活。可能是僵死进程或受内核保护。",
@@ -407,7 +407,7 @@ export const zhCN = {
     noAccess: "还没授权任何目录，所以看不到可清理的缓存。授权后重新扫描即可。",
     noCleanable: "已检查过你授权的目录，没有可安全清理的缓存。",
     partialFail: "部分项目清理失败",
-    notifyTitle: "MacSlim 清理完成",
+    notifyTitle: "SlimDisk 清理完成",
     notifyBody: "已释放 {size}，共清理 {count} 项",
     notifyBodyUnmeasured: "已清理 {count} 项，未能测量释放空间",
 
@@ -586,11 +586,11 @@ export const zhCN = {
     fda: {
       title: "完全磁盘访问权限",
       granted: "已授权，全部清理与进程能力可用",
-      needUserCache: "缓存清理与进程管理需要完全磁盘访问权限。在「系统设置 → 隐私与安全性 → 完全磁盘访问权限」里添加 MacSlim 后即可。",
-      needSystem: "进程枚举需要完全磁盘访问权限。在「系统设置 → 隐私与安全性 → 完全磁盘访问权限」里添加 MacSlim 后即可。",
-      needBoth: "缓存清理与进程管理需要完全磁盘访问权限。在「系统设置 → 隐私与安全性 → 完全磁盘访问权限」里添加 MacSlim 后即可。",
+      needUserCache: "缓存清理与进程管理需要完全磁盘访问权限。在「系统设置 → 隐私与安全性 → 完全磁盘访问权限」里添加 SlimDisk 后即可。",
+      needSystem: "进程枚举需要完全磁盘访问权限。在「系统设置 → 隐私与安全性 → 完全磁盘访问权限」里添加 SlimDisk 后即可。",
+      needBoth: "缓存清理与进程管理需要完全磁盘访问权限。在「系统设置 → 隐私与安全性 → 完全磁盘访问权限」里添加 SlimDisk 后即可。",
       openSettings: "打开系统设置",
-      manualHint: "若按钮无反应，请手动打开「系统设置 → 隐私与安全性 → 完全磁盘访问权限」，把 MacSlim 拖进去并打开开关。",
+      manualHint: "若按钮无反应，请手动打开「系统设置 → 隐私与安全性 → 完全磁盘访问权限」，把 SlimDisk 拖进去并打开开关。",
       openFailed: "无法自动打开设置页，请手动前往「系统设置 → 隐私与安全性 → 完全磁盘访问权限」。",
       // App Store 版专用：不提授权（授权无效），只说清边界 + 给去处。
       // 「减配版 / 受限版」这类词不要出现 —— App Store 审核指南 4.0 把
@@ -601,7 +601,7 @@ export const zhCN = {
     general: "通用设置",
     generalDesc: "基础行为开关",
     autostart: "开机自动启动",
-    autostartDesc: "macOS 登录时自动启动 MacSlim 并最小化到菜单栏",
+    autostartDesc: "macOS 登录时自动启动 SlimDisk 并最小化到菜单栏",
     notifyClean: "清理完成通知",
     notifyCleanDesc: "在 macOS 通知中心提示已释放空间",
     cleanupSound: "清理音效",
@@ -613,7 +613,7 @@ export const zhCN = {
     languageZh: "中文",
     languageEn: "English",
     updates: "检查更新",
-    updatesDesc: "手动检查 MacSlim 是否有新版本",
+    updatesDesc: "手动检查 SlimDisk 是否有新版本",
     updatesCheck: "检查",
     updatesChecking: "检查中...",
     updatesLatest: "已是最新版本 ({version})",
@@ -631,11 +631,11 @@ export const zhCN = {
     whitelistNotePH: "备注（可选）",
     whitelistBadgeProcess: "进程",
     whitelistBadgePath: "路径",
-    about: "关于 MacSlim",
+    about: "关于 SlimDisk",
     aboutLine1: "版本 {version} · 规则驱动 · 本地存储 · 开源友好",
     aboutLine2: "不上传任何数据，不接任何 LLM，不做广告推送",
-    aboutDb: "数据：~/Library/Application Support/MacSlim/macslim.db",
-    aboutCli: "CLI：~/MacSlim/src-tauri/target/debug/macslim-cli",
+    aboutDb: "数据：~/Library/Application Support/SlimDisk/slimdisk.db",
+    aboutCli: "CLI：~/SlimDisk/src-tauri/target/debug/slimdisk-cli",
   },
 
   // 占位符

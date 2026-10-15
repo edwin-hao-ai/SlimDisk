@@ -2,7 +2,7 @@ import type { Dict } from "./zh-CN";
 
 export const en: Dict = {
   common: {
-    appName: "MacSlim",
+    appName: "SlimDisk",
     tagline: "One-click Mac optimization",
     scan: "Scan",
     rescan: "Rescan",
@@ -43,7 +43,7 @@ export const en: Dict = {
   },
 
   welcome: {
-    title: "Welcome to MacSlim",
+    title: "Welcome to SlimDisk",
     subtitle:
       "A one-click Mac system maintenance tool.\nCleans residual processes and developer caches to keep your Mac snappy.",
     featureProcessTitle: "Process Cleanup",
@@ -309,7 +309,7 @@ export const en: Dict = {
     kill_already_gone: "The process was already gone",
     kill_failed: "Failed: {reason}",
     kill_permission_denied:
-      "Permission denied — usually a root or system process, which MacSlim should not even see",
+      "Permission denied — usually a root or system process, which SlimDisk should not even see",
     kill_respawned:
       "The original process was terminated, but a supervisor immediately restarted it as PID {new_pid} ({name}). Stop it from its launcher (launchd agent / pm2 / nvm / Cursor / VS Code), or add the process name to the whitelist to hide it.",
     kill_still_alive:
@@ -447,7 +447,7 @@ export const en: Dict = {
     noCleanable: "We checked the folders you authorized — nothing there is safe to clean.",
     noItems: "No caches to clean. Your Mac is spotless.",
     partialFail: "Some items failed to clean",
-    notifyTitle: "MacSlim cleanup complete",
+    notifyTitle: "SlimDisk cleanup complete",
     notifyBody: "Freed {size} across {count} items",
     notifyBodyUnmeasured: "Cleaned {count} items; freed space could not be measured",
 
@@ -643,14 +643,14 @@ export const en: Dict = {
       title: "Full Disk Access",
       granted: "Granted — all cleanup and process features are available",
       needUserCache:
-        "Cache cleanup and process management need Full Disk Access. Add MacSlim in System Settings → Privacy & Security → Full Disk Access.",
+        "Cache cleanup and process management need Full Disk Access. Add SlimDisk in System Settings → Privacy & Security → Full Disk Access.",
       needSystem:
-        "Process enumeration needs Full Disk Access. Add MacSlim in System Settings → Privacy & Security → Full Disk Access.",
+        "Process enumeration needs Full Disk Access. Add SlimDisk in System Settings → Privacy & Security → Full Disk Access.",
       needBoth:
-        "Cache cleanup and process management need Full Disk Access. Add MacSlim in System Settings → Privacy & Security → Full Disk Access.",
+        "Cache cleanup and process management need Full Disk Access. Add SlimDisk in System Settings → Privacy & Security → Full Disk Access.",
       openSettings: "Open System Settings",
       manualHint:
-        "If the button does nothing, open System Settings → Privacy & Security → Full Disk Access manually, drag MacSlim in, and turn it on.",
+        "If the button does nothing, open System Settings → Privacy & Security → Full Disk Access manually, drag SlimDisk in, and turn it on.",
       openFailed:
         "Could not open System Settings automatically. Go to System Settings → Privacy & Security → Full Disk Access manually.",
       // App Store build only. Do not mention granting access — it does not
@@ -664,7 +664,7 @@ export const en: Dict = {
     generalDesc: "Behavior toggles",
     autostart: "Launch at login",
     autostartDesc:
-      "Start MacSlim at macOS login and minimize to the menu bar",
+      "Start SlimDisk at macOS login and minimize to the menu bar",
     notifyClean: "Cleanup notifications",
     notifyCleanDesc: "Show a macOS notification when cleanup completes",
     cleanupSound: "Cleanup sound",
@@ -676,7 +676,7 @@ export const en: Dict = {
     languageZh: "中文",
     languageEn: "English",
     updates: "Check for Updates",
-    updatesDesc: "Manually check whether a newer MacSlim is available",
+    updatesDesc: "Manually check whether a newer SlimDisk is available",
     updatesCheck: "Check",
     updatesChecking: "Checking...",
     updatesLatest: "You are on the latest version ({version})",
@@ -696,12 +696,12 @@ export const en: Dict = {
     whitelistNotePH: "Note (optional)",
     whitelistBadgeProcess: "Process",
     whitelistBadgePath: "Path",
-    about: "About MacSlim",
+    about: "About SlimDisk",
     aboutLine1:
       "{version} · rule-driven · local storage · open-source friendly",
     aboutLine2: "No data uploaded · no LLM · no ads",
-    aboutDb: "Data: ~/Library/Application Support/MacSlim/macslim.db",
-    aboutCli: "CLI: ~/MacSlim/src-tauri/target/debug/macslim-cli",
+    aboutDb: "Data: ~/Library/Application Support/SlimDisk/slimdisk.db",
+    aboutCli: "CLI: ~/SlimDisk/src-tauri/target/debug/slimdisk-cli",
   },
 
   placeholder: {
