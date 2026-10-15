@@ -15,7 +15,7 @@ Tauri v2 **移除了 Mac App Store 支持**（`BundleType` 只有
 | 证书 | `Mac App Distribution: Beijing VGO Co;Ltd`（ASC API 创建，id `XV9LBSSZBJ`） |
 | 钥匙串显示名 | `3rd Party Mac Developer Application: Beijing VGO Co;Ltd (5XNDF727Y6)` |
 | 有效期至 | 2027-09-29 |
-| profile | `MacSlim MAS 1.0` / `MAC_APP_STORE`（id `d20fee78-…`） |
+| profile | `SlimDisk MAS 1.0` / `MAC_APP_STORE`（id `d20fee78-…`） |
 | bundleId | `com.vgoapp.macslim`（ASC `6BJU3FZ2NU`） |
 | appId | `6816609940`，版本 `1.0` / `PREPARE_FOR_SUBMISSION` / `MAC_OS` |
 
@@ -32,7 +32,7 @@ Tauri v2 **移除了 Mac App Store 支持**（`BundleType` 只有
 
 ### ❌ 不能跑
 
-**`macslim-cli` 一起签名后启动即 SIGTRAP（exit 133）**
+**`slimdisk-cli` 一起签名后启动即 SIGTRAP（exit 133）**
 
 崩溃栈全在 dyld 初始化阶段，与业务代码无关：
 
@@ -67,7 +67,7 @@ _libsecinit_appsandbox
 ## 事故记录：MAS 构建覆盖了完整版产物
 
 **现象**：MAS 构建与完整版共用 `src-tauri/target`，MAS 构建把 Developer ID
-签名的 `MacSlim.app` 整个顶掉（变成 3rd Party 签名），已构建好的 `.dmg` 也没了。
+签名的 `SlimDisk.app` 整个顶掉（变成 3rd Party 签名），已构建好的 `.dmg` 也没了。
 
 **影响**：GitHub 上已上传的 v1.0.0 不受影响（本地产物可重建），但本地完整版
 调试环境被破坏。

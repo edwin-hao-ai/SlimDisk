@@ -1,4 +1,4 @@
-# MacSlim 发布方案（双版本路线）
+# SlimDisk 发布方案（双版本路线）
 
 日期：2026-09-27
 关联：`docs/release-identity-and-asc.md`（身份与 ASC 对接）、`AGENTS.md` §8.5（签名与公证命令）
@@ -72,7 +72,7 @@
 | **updater 端点目录** | `docs/updates/` **不存在** | 自更新会失败 | 我建目录 + 首次 `latest.json` |
 | **版本号决策** | 当前 `0.2.2` | 首次公开发布建议 `1.0.0`（语义化：0.x 表示未稳定） | 你定 |
 | **e2e 门禁** | 21 项清单已设计，未实现 | 没有它就没有 go/no-go 依据 | 我实现 |
-| **安装包体积** | `MacSlim.app.tar.gz` = 32.1 MB（debug）；AGENTS.md 目标 <15 MB（release） | 超标需解释或优化 | release 构建后实测 |
+| **安装包体积** | `SlimDisk.app.tar.gz` = 32.1 MB（debug）；AGENTS.md 目标 <15 MB（release） | 超标需解释或优化 | release 构建后实测 |
 
 ### 1.2 只有 Developer ID 版缺
 
@@ -127,7 +127,7 @@ npm run bundle:arm
 随后：
 
 ```bash
-gh release upload v<版本> "src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/MacSlim_<版本>_aarch64.dmg" --clobber --repo edwin-hao-ai/MacSlim
+gh release upload v<版本> "src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/SlimDisk_<版本>_aarch64.dmg" --clobber --repo edwin-hao-ai/SlimDisk
 ```
 
 （注意：你的构建 target dir 被配置到 `~/.cargo/shared-target`，路径与 `AGENTS.md` 写的 `src-tauri/target` 不同，实测时以实际输出为准。）
@@ -160,7 +160,7 @@ gh release upload v<版本> "src-tauri/target/aarch64-apple-darwin/release/bundl
 
 ```bash
 # 1. 验凭证（复用 iOS 那套 .p8）
-python3 /tmp/macslim-asc-check.py
+python3 /tmp/slimdisk-asc-check.py
 
 # 2. 上传二进制（不走 API，走 altool）
 export API_PRIVATE_KEYS_DIR="$(dirname "$APPLE_API_KEY_PATH")"

@@ -2,7 +2,7 @@
 
 ## 漏洞披露
 
-如果你发现 MacSlim 的任何安全问题 —— 特别是会导致**误删用户数据**的 bug —— 请通过以下方式私下报告：
+如果你发现 SlimDisk 的任何安全问题 —— 特别是会导致**误删用户数据**的 bug —— 请通过以下方式私下报告：
 
 - 提交 GitHub issue 时标题加上 `[SECURITY]`，我们会第一时间移至私人讨论
 - 请**不要**在公开 Issue 中披露细节，我们希望先修复再公开
@@ -14,7 +14,7 @@
 
 ## 威胁模型
 
-MacSlim 的核心风险不是网络攻击（我们没有网络），而是**误删**。三个威胁向量：
+SlimDisk 的核心风险不是网络攻击（我们没有网络），而是**误删**。三个威胁向量：
 
 ### 1. 清理错误路径 → 用户数据丢失
 
@@ -44,7 +44,7 @@ MacSlim 的核心风险不是网络攻击（我们没有网络），而是**误�
 
 ## 不在威胁模型内
 
-以下情况**不是** MacSlim 的责任：
+以下情况**不是** SlimDisk 的责任：
 
 - 用户手动把自己的数据目录加到白名单后被误删（用户主动授权）
 - Apple 官方工具（npm / docker / brew / go / cargo）自身的命令行为
@@ -59,7 +59,7 @@ MacSlim 的核心风险不是网络攻击（我们没有网络），而是**误�
 
 验证签名：
 ```bash
-codesign -dvvv /Applications/MacSlim.app
+codesign -dvvv /Applications/SlimDisk.app
 # 应看到: Authority=Developer ID Application: Beijing VGO Co;Ltd (5XNDF727Y6)
 ```
 
@@ -69,7 +69,7 @@ codesign -dvvv /Applications/MacSlim.app
 
 ## 数据隐私
 
-MacSlim **不做**以下任何一件事：
+SlimDisk **不做**以下任何一件事：
 
 - 任何形式的 telemetry / 分析 / 用户行为上报
 - 任何形式的错误 / 崩溃上报（Sentry 等）
@@ -81,4 +81,4 @@ MacSlim **不做**以下任何一件事：
 - 从 App Store 外下载时，macOS Gatekeeper 自动请求 `ocsp.apple.com` 校验签名
 - 未来的软件更新（会在实现前征求用户意见）
 
-想自己验证？用 Little Snitch 监控网络，打开 MacSlim，确认除了 Apple 的 OCSP 检查外**没有任何出站连接**。
+想自己验证？用 Little Snitch 监控网络，打开 SlimDisk，确认除了 Apple 的 OCSP 检查外**没有任何出站连接**。

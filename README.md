@@ -1,14 +1,14 @@
 <div align="center">
 
-<img src="assets/logo.svg" width="80" height="80" alt="MacSlim" />
+<img src="assets/logo.svg" width="80" height="80" alt="SlimDisk" />
 
-# MacSlim
+# SlimDisk
 
 **The Mac cleaner that developers actually trust.**
 
 One-click cleanup for app caches, developer tools, Docker, and more — built with Rust and Tauri, not Electron.
 
-[Download for macOS →](https://github.com/edwin-hao-ai/MacSlim/releases)
+[Download for macOS →](https://github.com/edwin-hao-ai/SlimDisk/releases)
 
 ![macOS](https://img.shields.io/badge/macOS-13%2B-black?logo=apple)
 ![Tauri](https://img.shields.io/badge/Tauri-v2-blue)
@@ -19,9 +19,9 @@ One-click cleanup for app caches, developer tools, Docker, and more — built wi
 
 ---
 
-## Why MacSlim?
+## Why SlimDisk?
 
-Most Mac cleaners are either too simple (just empty the trash) or too bloated (Electron apps heavier than what they clean). MacSlim is different:
+Most Mac cleaners are either too simple (just empty the trash) or too bloated (Electron apps heavier than what they clean). SlimDisk is different:
 
 - **Tiny**: ~12 MB DMG. CleanMyMac is 200 MB+.
 - **Fast**: Rust backend, sub-second scans.
@@ -58,25 +58,25 @@ Items marked ⚠️ are shown but not selected by default.
 
 ### Download
 
-Grab the latest `.dmg` from [Releases](https://github.com/edwin-hao-ai/MacSlim/releases) and drag MacSlim to your Applications folder.
+Grab the latest `.dmg` from [Releases](https://github.com/edwin-hao-ai/SlimDisk/releases) and drag SlimDisk to your Applications folder.
 
 **Requirements**: macOS 13 Ventura or later, Apple Silicon or Intel.
 
-### Use the CLI (`macslim-cli`)
+### Use the CLI (`slimdisk-cli`)
 
-The desktop app ships with a standalone CLI binary at `/Applications/MacSlim.app/Contents/MacOS/macslim-cli`. Symlink it once for terminal access from anywhere:
+The desktop app ships with a standalone CLI binary at `/Applications/SlimDisk.app/Contents/MacOS/slimdisk-cli`. Symlink it once for terminal access from anywhere:
 
 ```bash
-sudo ln -s /Applications/MacSlim.app/Contents/MacOS/macslim-cli /usr/local/bin/macslim-cli
+sudo ln -s /Applications/SlimDisk.app/Contents/MacOS/slimdisk-cli /usr/local/bin/slimdisk-cli
 ```
 
 Then:
 
 ```bash
-macslim-cli --scan          # Scan all caches, no cleanup
-macslim-cli --cache         # Clean caches (with confirmation)
-macslim-cli --history       # Show operation history
-macslim-cli --help          # Full command list
+slimdisk-cli --scan          # Scan all caches, no cleanup
+slimdisk-cli --cache         # Clean caches (with confirmation)
+slimdisk-cli --history       # Show operation history
+slimdisk-cli --help          # Full command list
 ```
 
 The CLI shares the same Rust core as the desktop app — same scanners, same safety checks, same SQLite history database.
@@ -99,8 +99,8 @@ xcode-select --install
 **Run in development**
 
 ```bash
-git clone https://github.com/edwin-hao-ai/MacSlim.git
-cd macslim
+git clone https://github.com/edwin-hao-ai/SlimDisk.git
+cd slimdisk
 bun install
 bun run tauri dev
 ```
@@ -138,7 +138,7 @@ The `.app` and `.dmg` will be in `src-tauri/target/<arch>/release/bundle/`.
 
 ## Safety Model
 
-MacSlim uses a three-layer safety system before deleting anything:
+SlimDisk uses a three-layer safety system before deleting anything:
 
 1. **Tool busy check** — if `npm`, `cargo`, `xcodebuild`, etc. are running, their caches are hidden from the scan entirely.
 2. **Path allowlist** — only a hardcoded set of safe paths can ever be deleted. Attempts to delete `/`, `$HOME`, `~/Documents`, or anything outside the allowlist are rejected.
@@ -151,7 +151,7 @@ All cleanup operations are logged to a local SQLite database. You can review eve
 ## Project Structure
 
 ```
-macslim/
+slimdisk/
 ├── src/                  # SolidJS frontend
 │   ├── views/            # Page components (Scan, Cache, Process, Uninstaller…)
 │   ├── components/       # Shared UI components
@@ -223,7 +223,7 @@ MIT — see [LICENSE](LICENSE).
 
 </div>
 
-MacSlim 是一款 Mac 专属的系统清理工具，面向开发者和普通用户。
+SlimDisk 是一款 Mac 专属的系统清理工具，面向开发者和普通用户。
 
 **核心特点：**
 
@@ -240,23 +240,23 @@ MacSlim 是一款 Mac 专属的系统清理工具，面向开发者和普通用�
 
 **安装方式：**
 
-从 [Releases](https://github.com/edwin-hao-ai/MacSlim/releases) 下载最新 `.dmg`，拖入应用程序文件夹即可。
+从 [Releases](https://github.com/edwin-hao-ai/SlimDisk/releases) 下载最新 `.dmg`，拖入应用程序文件夹即可。
 
-**使用命令行工具 (`macslim-cli`)：**
+**使用命令行工具 (`slimdisk-cli`)：**
 
-桌面 App 内自带一个独立 CLI 二进制，路径在 `/Applications/MacSlim.app/Contents/MacOS/macslim-cli`。建议软链到 PATH 里方便调用：
+桌面 App 内自带一个独立 CLI 二进制，路径在 `/Applications/SlimDisk.app/Contents/MacOS/slimdisk-cli`。建议软链到 PATH 里方便调用：
 
 ```bash
-sudo ln -s /Applications/MacSlim.app/Contents/MacOS/macslim-cli /usr/local/bin/macslim-cli
+sudo ln -s /Applications/SlimDisk.app/Contents/MacOS/slimdisk-cli /usr/local/bin/slimdisk-cli
 ```
 
 然后任意终端：
 
 ```bash
-macslim-cli --scan          # 扫描全部缓存（不清理）
-macslim-cli --cache         # 清理缓存（带二次确认）
-macslim-cli --history       # 查看操作历史
-macslim-cli --help          # 全部命令
+slimdisk-cli --scan          # 扫描全部缓存（不清理）
+slimdisk-cli --cache         # 清理缓存（带二次确认）
+slimdisk-cli --history       # 查看操作历史
+slimdisk-cli --help          # 全部命令
 ```
 
 CLI 和桌面 App 共用同一份 Rust 核心和 SQLite 历史数据库，扫描规则、安全检查完全一致。
@@ -264,8 +264,8 @@ CLI 和桌面 App 共用同一份 Rust 核心和 SQLite 历史数据库，扫描
 **从源码构建：**
 
 ```bash
-git clone https://github.com/edwin-hao-ai/MacSlim.git
-cd macslim
+git clone https://github.com/edwin-hao-ai/SlimDisk.git
+cd slimdisk
 bun install
 bun run tauri dev      # 开发模式
 bun run bundle:arm     # 打包 Apple Silicon
@@ -277,5 +277,5 @@ bun run bundle:intel   # 打包 Intel
 ---
 
 <div align="center">
-Made with ♥ in Beijing &nbsp;·&nbsp; <a href="https://github.com/edwin-hao-ai/MacSlim/issues">Report a bug</a> &nbsp;·&nbsp; <a href="https://github.com/edwin-hao-ai/MacSlim/discussions">Discussions</a>
+Made with ♥ in Beijing &nbsp;·&nbsp; <a href="https://github.com/edwin-hao-ai/SlimDisk/issues">Report a bug</a> &nbsp;·&nbsp; <a href="https://github.com/edwin-hao-ai/SlimDisk/discussions">Discussions</a>
 </div>

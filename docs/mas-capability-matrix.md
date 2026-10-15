@@ -4,7 +4,7 @@
 > 上一版结论（`mas-sandbox-findings.md`）里有一条推理链被这份实测推翻了，
 > 所以旧文档保留但以本文为准。
 >
-> 数据来源：`macslim --probe-sandbox`。无 GUI、无 Tauri，直接打印 JSON。
+> 数据来源：`slimdisk --probe-sandbox`。无 GUI、无 Tauri，直接打印 JSON。
 > 沙箱由内核按签名里的 entitlement 施加，跟从 Finder 还是终端启动**无关**，
 > 所以这样跑出来的路径可达性与 GUI 里完全一致。同一台机器、同一时刻、
 > 两个构建各跑一次。
@@ -27,13 +27,13 @@
 
 ```bash
 # MAS 包（已签名、开沙箱）
-~/.cargo/shared-target-mas/aarch64-apple-darwin/release/bundle/macos/MacSlim.app/Contents/MacOS/macslim --probe-sandbox
+~/.cargo/shared-target-mas/aarch64-apple-darwin/release/bundle/macos/SlimDisk.app/Contents/MacOS/slimdisk --probe-sandbox
 
 # 完整版（非沙箱）—— 同机对照
 cargo run --manifest-path src-tauri/Cargo.toml -- --probe-sandbox
 
 # 签名 / profile 的一致性核对
-python3 scripts/create_mas_profile.py --show --app <上面那个 MacSlim.app>
+python3 scripts/create_mas_profile.py --show --app <上面那个 SlimDisk.app>
 ```
 
 ## 2. 根因：$HOME 被重定向
@@ -158,7 +158,7 @@ profile 授权（App Store 下只有这三类是正常的）：
   com.apple.developer.team-identifier = 5XNDF727Y6
   keychain-access-groups = ['5XNDF727Y6.*']
 
-签名里的沙箱权限（MacSlim.app）：
+签名里的沙箱权限（SlimDisk.app）：
   [有] com.apple.security.app-sandbox
   [有] com.apple.security.files.bookmarks.app-scope
   [有] com.apple.security.files.user-selected.read-write
@@ -267,7 +267,7 @@ App Store 版，由 `scripts/create_mas_installer_cert.py` 通过 API 签发
 1. 在**图形界面的终端**里手动跑一次 `productsign`（有 GUI 就能弹框确认）：
    ```bash
    xcrun productsign --sign "3rd Party Mac Developer Installer: Beijing VGO Co;Ltd (5XNDF727Y6)" \
-     /tmp/comp.pkg dist/mas/MacSlim-1.0.0-mas.pkg
+     /tmp/comp.pkg dist/mas/SlimDisk-1.0.0-mas.pkg
    ```
    先用 `xcrun pkgbuild --component <app>.app --install-location /Applications /tmp/comp.pkg` 生成组件包。
 2. 走 Xcode 的 Archive & Export（Apple 推荐的规范路径，能绕过手写签名链）。

@@ -1,4 +1,4 @@
-# MacSlim 发布身份与 App Store Connect 对接
+# SlimDisk 发布身份与 App Store Connect 对接
 
 日期：2026-09-27
 状态：已记录，待发布阶段执行
@@ -11,7 +11,7 @@
 | :--- | :--- | :--- |
 | App ID Prefix（Team ID） | `5XNDF727Y6` | 用户提供；`APPLE_TEAM_ID` 实测一致 |
 | Bundle ID | `com.vgoapp.macslim` | 用户提供；**已写入 `src-tauri/tauri.conf.json`** |
-| ASC App 名称 | MacSlim | ASC 实测 |
+| ASC App 名称 | SlimDisk | ASC 实测 |
 | ASC App ID | `6816609940` | ASC 实测（`GET /v1/apps?filter[bundleId]=com.vgoapp.macslim`） |
 | ASC 平台 | **`MAC_OS`** | ASC 实测（`appStoreVersions.platform`），确认是 Mac 应用而非 iOS |
 | 已建版本 | `1.0`，状态 `PREPARE_FOR_SUBMISSION` | ASC 实测 |
@@ -27,12 +27,12 @@
 
 ### 1.2 Bundle ID 变更记录
 
-`com.macslim.desktop` → `com.vgoapp.macslim`，共 9 处：
+`com.slimdisk.desktop` → `com.vgoapp.macslim`，共 9 处：
 
 - `src-tauri/tauri.conf.json:5`
 - `scripts/tests/test_updater_artifact.py` 8 处（updater 的 identifier 校验夹具，必须与真实 ID 一致，否则「标识符不匹配」用例语义会失效）
 
-**无需数据迁移**：`~/Library/Application Support/com.macslim.desktop` 不存在（该 app 从未落过盘），所以没有历史记录 / 白名单 / 设置需要搬迁。
+**无需数据迁移**：`~/Library/Application Support/com.slimdisk.desktop` 不存在（该 app 从未落过盘），所以没有历史记录 / 白名单 / 设置需要搬迁。
 
 验证：`bun run verify` 退出 0。
 
@@ -116,7 +116,7 @@ APPLE_TEAM_ID=<Team ID>
 
 ---
 
-## 4. MacSlim 上 Mac App Store 的三个硬差异
+## 4. SlimDisk 上 Mac App Store 的三个硬差异
 
 mddock 项目**没有任何 macOS → App Store 的先例**（其 macOS 版走 Developer ID + 公证，与 ASC 无关）。复用时必须自己补：
 
@@ -126,7 +126,7 @@ mddock 项目**没有任何 macOS → App Store 的先例**（其 macOS 版走 D
 
 ### 4.1 ⚠️ 与既有结论的冲突（必须先解决）
 
-`docs/superpowers/mas-feasibility-and-e2e-release-gate.md` 已论证：**MacSlim 的核心功能与 App Sandbox 结构性冲突**（删 `~/Library/Caches`、`~/.npm`、`~/.cargo`、废纸篓、终止任意 PID、执行 npm/brew/docker CLI、自更新，全部在沙箱外或被禁止）。按该分析，MAS 版会只剩「只读体检 + 用户手动选中单个 app 卸载」。
+`docs/superpowers/mas-feasibility-and-e2e-release-gate.md` 已论证：**SlimDisk 的核心功能与 App Sandbox 结构性冲突**（删 `~/Library/Caches`、`~/.npm`、`~/.cargo`、废纸篓、终止任意 PID、执行 npm/brew/docker CLI、自更新，全部在沙箱外或被禁止）。按该分析，MAS 版会只剩「只读体检 + 用户手动选中单个 app 卸载」。
 
 用户现已在 ASC 建好 `com.vgoapp.macslim`，与该结论方向相反。**需要用户明确**：是接受一个功能大幅缩水、且审核风险高的 MAS 版，还是仍以 Developer ID + 公证 + GitHub Releases 为主路线、ASC 记录先留着。
 
