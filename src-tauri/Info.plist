@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
     <key>NSAppleEventsUsageDescription</key>
-    <string>MacSlim 需要发送 AppleEvent 来优雅退出其他应用程序。</string>
+    <string>SlimDisk 需要发送 AppleEvent 来优雅退出其他应用程序。</string>
 </dict>
 </plist>

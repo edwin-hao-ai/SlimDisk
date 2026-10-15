@@ -20,7 +20,7 @@
            智能扫描页的「磁盘占用」环形图直接读它，理由是
            E174.1（向用户展示本机磁盘用量）。
 
-        两个 NSPrivacyTracking 都是 false：MacSlim 无遥测、无第三方分析 SDK、
+        两个 NSPrivacyTracking 都是 false：SlimDisk 无遥测、无第三方分析 SDK、
         无数据出本机（见 docs 与隐私政策页）。NSPrivacyCollectedDataTypes 是空
         数组 —— 我们不收集任何用户数据。
     -->

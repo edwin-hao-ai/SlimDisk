@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Default MacSlim permissions",
+  "description": "Default SlimDisk permissions",
   "windows": [
     "main"
   ],
