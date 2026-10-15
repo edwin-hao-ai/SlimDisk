@@ -669,7 +669,7 @@ fn augmented_path_for_spawn() -> String {
 async fn remove_directory(path: &Path) -> Result<(), UserError> {
     let timestamp = chrono::Utc::now().format("%Y%m%d-%H%M%S");
     let trash = std::env::temp_dir().join(format!(
-        "macslim-trash-{}-{}",
+        "slimdisk-trash-{}-{}",
         timestamp,
         path.file_name()
             .map(|s| s.to_string_lossy().to_string())
@@ -687,7 +687,7 @@ async fn remove_directory(path: &Path) -> Result<(), UserError> {
         // `is_cleanup_path_allowed` 返回 false → 清理**必然**失败，报的还是
         // 「路径不在白名单内」这种把人引向错误方向的理由。实测日志：
         //
-        //     Sandbox: macslim deny(1) file-read-data /Users/edwinhao/Library/Logs
+        //     Sandbox: slimdisk deny(1) file-read-data /Users/edwinhao/Library/Logs
         //
         // 用户表现仍是「授权了、选中了、确认了，然后什么都没删」。
         //
@@ -746,7 +746,7 @@ async fn remove_directory(path: &Path) -> Result<(), UserError> {
 /// 于是「删掉目录本身」这一步要修改父目录，被沙箱拒绝：
 ///
 /// ```text
-/// Sandbox: macslim deny(1) file-write-unlink /Users/edwinhao/Library
+/// Sandbox: slimdisk deny(1) file-write-unlink /Users/edwinhao/Library
 /// 删除失败: Permission denied (os error 13)
 /// ```
 ///
@@ -778,7 +778,7 @@ fn clear_directory_contents(path: &Path) -> std::io::Result<()> {
 /// 「哪个路径、为什么」这两件事。
 fn log_cleanup_failure(path: &Path, error: &UserError) {
     eprintln!(
-        "[macslim] 清理失败 path={} code={:?} message={}",
+        "[slimdisk] 清理失败 path={} code={:?} message={}",
         path.display(),
         error.code,
         error.message

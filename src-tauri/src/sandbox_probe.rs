@@ -27,7 +27,7 @@
 //!
 //! ```bash
 //! # 无 GUI、无 Tauri，直接打印 JSON 后退出
-//! MacSlim.app/Contents/MacOS/macslim --probe-sandbox
+//! SlimDisk.app/Contents/MacOS/slimdisk --probe-sandbox
 //! ```
 //!
 //! 沙箱由内核按签名里的 entitlement 施加，跟从 Finder 启动还是从终端启动

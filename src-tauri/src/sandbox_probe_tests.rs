@@ -307,19 +307,19 @@ fn verdict_does_not_claim_a_problem_when_nothing_is_blocked() {
 #[test]
 fn the_probe_flag_is_recognised_and_nothing_else_is() {
     assert!(probe_requested(
-        ["macslim", "--probe-sandbox"]
+        ["slimdisk", "--probe-sandbox"]
             .iter()
             .map(|s| s.to_string())
             .collect()
     ));
     // 普通启动、以及拼错的名字，都必须走正常 GUI 流程
-    assert!(!probe_requested(vec!["macslim".to_string()]));
+    assert!(!probe_requested(vec!["slimdisk".to_string()]));
     assert!(!probe_requested(vec![
-        "macslim".to_string(),
+        "slimdisk".to_string(),
         "--probe".to_string()
     ]));
     assert!(!probe_requested(vec![
-        "macslim".to_string(),
+        "slimdisk".to_string(),
         "probe-sandbox".to_string()
     ]));
 }

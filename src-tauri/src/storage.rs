@@ -56,7 +56,7 @@ impl Storage {
         })
     }
 
-    /// 测试用：不落盘，避免污染真实 `macslim.db`。
+    /// 测试用：不落盘，避免污染真实 `slimdisk.db`。
     #[cfg(test)]
     pub(crate) fn open_in_memory() -> Result<Self, UserError> {
         let conn = Connection::open_in_memory().map_err(|e| format!("打开内存 DB 失败: {}", e))?;
@@ -306,7 +306,7 @@ impl Storage {
 
 fn db_path() -> Result<PathBuf, UserError> {
     let base = dirs::config_dir().ok_or("无法获取配置目录")?;
-    Ok(base.join("MacSlim").join("macslim.db"))
+    Ok(base.join("SlimDisk").join("slimdisk.db"))
 }
 
 #[cfg(test)]

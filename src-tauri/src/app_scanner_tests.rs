@@ -94,7 +94,7 @@ impl ScanFixture {
         static SEQ: AtomicU64 = AtomicU64::new(0);
         let seq = SEQ.fetch_add(1, Ordering::Relaxed);
         let root = std::env::temp_dir().join(format!(
-            "macslim_app_scanner_fixture_{}_{}_{label}",
+            "slimdisk_app_scanner_fixture_{}_{}_{label}",
             std::process::id(),
             seq
         ));
@@ -560,9 +560,9 @@ fn parallel_icon_decoding_survives_apps_sharing_one_icon_file_name() {
 /// 独立验证「图标临时文件用完即删」。
 ///
 /// 这条**故意不放在** `parallel_icon_decoding_survives_apps_sharing_one_icon_file_name`
-/// 末尾。原来的写法扫的是**全局** temp 目录，于是「这台机器上有没有别的 macslim
-/// 跑过」也会算成失败 —— 实测开发期间反复 quit / pkill 掉 MacSlim 留下了 14 个
-/// `macslim_icon_*` 文件，之后每次跑测试都红，而 `cargo test` 单跑又能过。
+/// 末尾。原来的写法扫的是**全局** temp 目录，于是「这台机器上有没有别的 slimdisk
+/// 跑过」也会算成失败 —— 实测开发期间反复 quit / pkill 掉 SlimDisk 留下了 14 个
+/// `slimdisk_icon_*` 文件，之后每次跑测试都红，而 `cargo test` 单跑又能过。
 /// 那是环境脏，不是被测代码泄漏。
 ///
 /// 拆出来之后用**调用方指定的目录**断言（`icns_to_base64_png` 的第二个参数就是
@@ -572,7 +572,7 @@ fn icon_temp_file_is_removed_after_conversion() {
     use std::sync::atomic::{AtomicU64, Ordering};
     static DIR_SEQ: AtomicU64 = AtomicU64::new(0);
     let scratch = std::env::temp_dir().join(format!(
-        "macslim_icon_leak_probe_{}_{}",
+        "slimdisk_icon_leak_probe_{}_{}",
         std::process::id(),
         DIR_SEQ.fetch_add(1, Ordering::Relaxed)
     ));
@@ -596,7 +596,7 @@ fn icon_temp_file_is_removed_after_conversion() {
         .flatten()
         .filter_map(|e| e.ok())
         .map(|e| e.file_name().to_string_lossy().into_owned())
-        .filter(|name| name.starts_with("macslim_icon_"))
+        .filter(|name| name.starts_with("slimdisk_icon_"))
         .collect();
     let _ = std::fs::remove_dir_all(&scratch);
 

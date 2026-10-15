@@ -9,7 +9,7 @@ fn bundle(name: &str) -> String {
 #[tokio::test]
 async fn uninstaller_observe_apps_skips_missing_bundles() {
     let observed = SystemUninstaller
-        .observe_apps(&[bundle("does-not-exist-macslim")])
+        .observe_apps(&[bundle("does-not-exist-slimdisk")])
         .await
         .unwrap();
 
@@ -46,13 +46,13 @@ async fn uninstaller_observe_apps_reads_identity_from_bundle_metadata() {
 
 #[test]
 fn uninstaller_observe_apps_falls_back_to_bundle_file_name() {
-    let missing = PathBuf::from("/Applications/MacSlimFallback.app");
+    let missing = PathBuf::from("/Applications/SlimDiskFallback.app");
     if missing.exists() {
         return;
     }
 
     assert!(read_installed_identity(&missing).is_none());
-    assert_eq!(bundle_display_name(&missing, None), "MacSlimFallback");
+    assert_eq!(bundle_display_name(&missing, None), "SlimDiskFallback");
     assert_eq!(
         bundle_display_name(&missing, Some("Beta".to_owned())),
         "Beta"
@@ -63,13 +63,13 @@ fn uninstaller_observe_apps_falls_back_to_bundle_file_name() {
 #[tokio::test]
 async fn uninstaller_observe_residues_marks_absent_paths() {
     let observed = SystemUninstaller
-        .observe_residues(&["/tmp/macslim-does-not-exist-9d2f".to_owned()])
+        .observe_residues(&["/tmp/slimdisk-does-not-exist-9d2f".to_owned()])
         .await
         .unwrap();
 
     assert_eq!(observed.len(), 1);
     assert!(!observed[0].exists);
-    assert_eq!(observed[0].path, "/tmp/macslim-does-not-exist-9d2f");
+    assert_eq!(observed[0].path, "/tmp/slimdisk-does-not-exist-9d2f");
 }
 
 #[tokio::test]
@@ -97,7 +97,7 @@ async fn uninstaller_observe_residues_canonicalizes_existing_paths() {
 async fn uninstaller_observe_residues_keeps_requested_order_and_marks_existence() {
     let existing = std::env::current_exe().expect("测试二进制必须存在");
     let requested = existing.to_string_lossy().to_string();
-    let missing = "/tmp/macslim-does-not-exist-9d2f".to_owned();
+    let missing = "/tmp/slimdisk-does-not-exist-9d2f".to_owned();
 
     let observed = SystemUninstaller
         .observe_residues(&[missing.clone(), requested])
@@ -115,7 +115,7 @@ fn uninstaller_is_app_running_never_matches_unrelated_path() {
     let mut sys = sysinfo::System::new_all();
     sys.refresh_processes(sysinfo::ProcessesToUpdate::All, true);
 
-    assert!(!is_app_running("/nonexistent/macslim-app", &mut sys));
+    assert!(!is_app_running("/nonexistent/slimdisk-app", &mut sys));
 }
 
 #[test]

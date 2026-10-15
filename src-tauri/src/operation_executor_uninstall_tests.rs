@@ -586,7 +586,7 @@ fn uninstall_revalidation_rejects_live_path_before_root_check() {
     let error = revalidate_uninstall_targets(
         std::slice::from_ref(&target),
         &[app],
-        &[live_residue("/tmp/macslim-escaped-cache")],
+        &[live_residue("/tmp/slimdisk-escaped-cache")],
     )
     .unwrap_err();
 
@@ -656,7 +656,7 @@ async fn uninstall_plan_rejects_roots_escape_introduced_after_prepare() {
         .unwrap();
     let escaped = FakeUninstallDomain::new(
         vec![installed_identity("alpha")],
-        vec![live_residue("/tmp/macslim-post-prepare-escape")],
+        vec![live_residue("/tmp/slimdisk-post-prepare-escape")],
     );
 
     let consumed = store.consume(&prepared.operation_id, "main").unwrap();

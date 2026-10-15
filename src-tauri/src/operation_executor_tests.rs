@@ -331,7 +331,7 @@ async fn stale_cleanup_rejects_ancestor_symlink_change() {
         .unwrap()
         .as_nanos();
     let base = dirs::home_dir().unwrap().join("Projects").join(format!(
-        ".macslim-stale-test-{}-{stamp}",
+        ".slimdisk-stale-test-{}-{stamp}",
         std::process::id()
     ));
     let original = base.join("project");

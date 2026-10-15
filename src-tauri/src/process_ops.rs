@@ -176,7 +176,7 @@ impl KillOutcome {
             }
             KillOutcome::PermissionDenied => UserError::new(
                 ErrorCode::KILL_PERMISSION_DENIED,
-                "权限不足（通常是 root 或系统进程，MacSlim 不应该看到这类进程）",
+                "权限不足（通常是 root 或系统进程，SlimDisk 不应该看到这类进程）",
             ),
             KillOutcome::RespawnedAs { new_pid, name } => UserError::with(
                 ErrorCode::KILL_RESPAWNED,

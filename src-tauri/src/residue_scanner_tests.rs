@@ -310,7 +310,7 @@ fn uninstaller_residue_batch_registration_supports_all_apps_without_residues() {
 #[test]
 fn uninstaller_scan_directory_drops_entries_outside_allowed_roots() {
     let matched = "com.example.scanfixture";
-    let outside = outside_fixture_dir("macslim-scan-outside", matched);
+    let outside = outside_fixture_dir("slimdisk-scan-outside", matched);
     let mut items = Vec::new();
 
     let roots = residue_policy::allowed_roots(matched);
@@ -334,7 +334,7 @@ fn uninstaller_scan_directory_drops_entries_outside_allowed_roots() {
 #[test]
 fn uninstaller_scan_directory_drops_symlinked_entries_that_escape_allowed_roots() {
     let matched = "com.example.scanescape";
-    let outside = outside_fixture_dir("macslim-scan-escape-target", "payload");
+    let outside = outside_fixture_dir("slimdisk-scan-escape-target", "payload");
     let link = dirs::home_dir()
         .expect("测试环境必须有用户主目录")
         .join("Library/Caches")
@@ -344,10 +344,10 @@ fn uninstaller_scan_directory_drops_symlinked_entries_that_escape_allowed_roots(
         let _ = std::fs::remove_dir_all(&outside);
         return;
     }
-    let scan_root = outside_fixture_dir("macslim-scan-escape-root", "");
+    let scan_root = outside_fixture_dir("slimdisk-scan-escape-root", "");
     let _ = std::fs::remove_dir(&scan_root);
     let holder =
-        std::env::temp_dir().join(format!("macslim-scan-escape-root-{}", std::process::id()));
+        std::env::temp_dir().join(format!("slimdisk-scan-escape-root-{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&holder);
     if std::fs::create_dir_all(holder.join(matched)).is_err() {
         let _ = std::fs::remove_file(&link);
@@ -380,7 +380,7 @@ fn uninstaller_scan_directory_drops_symlinked_entries_that_escape_allowed_roots(
 #[test]
 fn uninstaller_scan_directory_keeps_entries_inside_allowed_roots() {
     let matched = "com.example.scaninside";
-    let dir = library_root_fixture("macslim-scan-inside", matched);
+    let dir = library_root_fixture("slimdisk-scan-inside", matched);
     let Some(dir) = dir else {
         return;
     };

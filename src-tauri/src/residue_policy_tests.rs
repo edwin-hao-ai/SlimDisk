@@ -114,8 +114,8 @@ fn residue_policy_rejects_absolute_dev_tool_rule_path() {
 
 #[test]
 fn residue_policy_rejects_symlink_that_escapes_allowed_root() {
-    let outside = fixture_dir("macslim-policy-outside");
-    let Some(escape) = fixture_link("macslim-policy-escape", &outside) else {
+    let outside = fixture_dir("slimdisk-policy-outside");
+    let Some(escape) = fixture_link("slimdisk-policy-escape", &outside) else {
         cleanup_fixture(Path::new(""), Some(&outside));
         return;
     };
@@ -129,8 +129,8 @@ fn residue_policy_rejects_symlink_that_escapes_allowed_root() {
 
 #[test]
 fn residue_policy_rejects_symlink_target_itself() {
-    let outside = fixture_dir("macslim-policy-outside-leaf");
-    let Some(escape) = fixture_link("macslim-policy-escape-leaf", &outside) else {
+    let outside = fixture_dir("slimdisk-policy-outside-leaf");
+    let Some(escape) = fixture_link("slimdisk-policy-escape-leaf", &outside) else {
         cleanup_fixture(Path::new(""), Some(&outside));
         return;
     };
@@ -145,12 +145,12 @@ fn residue_policy_rejects_symlink_target_itself() {
 #[test]
 fn residue_policy_symlink_between_allowed_roots_is_accepted() {
     let real_dir =
-        library_root("Logs").join(format!("macslim-policy-inside-{}", std::process::id()));
+        library_root("Logs").join(format!("slimdisk-policy-inside-{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&real_dir);
     if std::fs::create_dir_all(&real_dir).is_err() {
         return;
     }
-    let Some(link_dir) = fixture_link("macslim-policy-inside", &real_dir) else {
+    let Some(link_dir) = fixture_link("slimdisk-policy-inside", &real_dir) else {
         let _ = std::fs::remove_dir_all(&real_dir);
         return;
     };
@@ -187,7 +187,7 @@ fn cleanup_fixture(link: &Path, target: Option<&Path>) {
 
 #[test]
 fn residue_policy_resolves_canonical_through_existing_ancestor() {
-    let missing = home().join("Library/Caches/macslim-policy-missing/child");
+    let missing = home().join("Library/Caches/slimdisk-policy-missing/child");
 
     let resolved_path = resolved(&missing);
 
@@ -197,7 +197,7 @@ fn residue_policy_resolves_canonical_through_existing_ancestor() {
 
 #[test]
 fn residue_policy_convenience_check_reports_unknown_bundle_without_roots() {
-    let outside = Path::new("/tmp/macslim-policy-outside");
+    let outside = Path::new("/tmp/slimdisk-policy-outside");
 
     let alpha = allowed_roots("com.example.alpha");
     let empty = allowed_roots("");
@@ -235,12 +235,12 @@ fn residue_policy_roots_are_canonicalized_like_candidates() {
 
 #[test]
 fn residue_policy_skips_roots_that_cannot_be_resolved() {
-    let missing = home().join("Library/macslim-policy-missing-root/Caches");
+    let missing = home().join("Library/slimdisk-policy-missing-root/Caches");
     let mut roots = allowed_roots("com.example.alpha");
     roots.containers.push(missing);
     roots
         .exact
-        .push(home().join(".macslim-policy-missing-exact"));
+        .push(home().join(".slimdisk-policy-missing-exact"));
 
     let accepted = ensure_within_roots(&library_root("Caches").join("com.example.alpha"), &roots);
     let rejected = ensure_within_roots(Path::new("/etc/alpha"), &roots);
@@ -252,12 +252,12 @@ fn residue_policy_skips_roots_that_cannot_be_resolved() {
 #[test]
 fn residue_policy_accepts_library_root_reached_through_symlink() {
     let real_root =
-        library_root("Logs").join(format!("macslim-policy-liblink-{}", std::process::id()));
+        library_root("Logs").join(format!("slimdisk-policy-liblink-{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&real_root);
     if std::fs::create_dir_all(&real_root).is_err() {
         return;
     }
-    let link = home().join("Library/macslim-policy-liblink-parent");
+    let link = home().join("Library/slimdisk-policy-liblink-parent");
     let _ = std::fs::remove_file(&link);
     if std::os::unix::fs::symlink(&real_root, &link).is_err() {
         let _ = std::fs::remove_dir_all(&real_root);
@@ -280,8 +280,8 @@ fn residue_policy_accepts_library_root_reached_through_symlink() {
 
 #[test]
 fn residue_policy_canonical_roots_keep_symlink_root_escape_rejected() {
-    let outside = fixture_dir("macslim-policy-canon-outside");
-    let escape = fixture_link("macslim-policy-canon-escape", &outside);
+    let outside = fixture_dir("slimdisk-policy-canon-outside");
+    let escape = fixture_link("slimdisk-policy-canon-escape", &outside);
     if escape.is_none() {
         cleanup_fixture(Path::new(""), Some(&outside));
         return;

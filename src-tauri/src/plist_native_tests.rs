@@ -20,7 +20,7 @@ fn write(dir: &Path, name: &str, bytes: &[u8]) -> std::path::PathBuf {
 }
 
 fn scratch(tag: &str) -> std::path::PathBuf {
-    let dir = std::env::temp_dir().join(format!("macslim_plist_probe_{tag}"));
+    let dir = std::env::temp_dir().join(format!("slimdisk_plist_probe_{tag}"));
     let _ = std::fs::remove_dir_all(&dir);
     dir
 }

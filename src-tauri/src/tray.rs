@@ -20,7 +20,7 @@ pub struct TrayItems {
 /// ## 为什么托盘要单独做一套
 ///
 /// 托盘菜单在 Rust 里构建，拿不到前端的 i18n 上下文；而它此前是**整块硬编码
-/// 中文**：英文用户在菜单栏里看到「系统状态 / 立即扫描 / 退出 MacSlim」，
+/// 中文**：英文用户在菜单栏里看到「系统状态 / 立即扫描 / 退出 SlimDisk」，
 /// 这是审核一眼能看见的（macOS 菜单栏属于系统 chrome，不是应用内容区）。
 ///
 /// 语言取**系统语言**而不是应用内设置：macOS 的菜单栏/菜单项按惯例跟随系统
@@ -46,14 +46,14 @@ const ZH: TrayText = TrayText {
     cpu: "CPU",
     mem: "内存",
     disk: "磁盘",
-    open: "打开 MacSlim",
+    open: "打开 SlimDisk",
     scan: "立即扫描",
     optimize: "一键优化（安全项）",
-    quit: "退出 MacSlim",
+    quit: "退出 SlimDisk",
     status_normal: "正常",
     status_busy: "运行中",
     status_attention: "需要关注",
-    about_prefix: "关于 MacSlim",
+    about_prefix: "关于 SlimDisk",
 };
 
 const EN: TrayText = TrayText {
@@ -61,14 +61,14 @@ const EN: TrayText = TrayText {
     cpu: "CPU",
     mem: "Memory",
     disk: "Disk",
-    open: "Open MacSlim",
+    open: "Open SlimDisk",
     scan: "Scan Now",
     optimize: "One-Click Optimize (safe items)",
-    quit: "Quit MacSlim",
+    quit: "Quit SlimDisk",
     status_normal: "Normal",
     status_busy: "Busy",
     status_attention: "Needs attention",
-    about_prefix: "About MacSlim",
+    about_prefix: "About SlimDisk",
 };
 
 fn text() -> &'static TrayText {
@@ -155,7 +155,7 @@ pub fn init_tray(app: &AppHandle) -> tauri::Result<()> {
     let _ = TrayIconBuilder::with_id("main-tray")
         .icon(tray_icon)
         .icon_as_template(true)
-        .tooltip("MacSlim")
+        .tooltip("SlimDisk")
         .menu(&menu)
         .show_menu_on_left_click(false)
         .on_tray_icon_event(|tray, event| {
@@ -248,7 +248,7 @@ pub fn refresh_tray(app: &AppHandle, h: &SystemHealth) {
         let _ = tray.set_title(Some(title_text.clone()));
         let l = text();
         let tip = format!(
-            "MacSlim\n{} {:.1}%   {} {:.1}%   {} {:.1}%",
+            "SlimDisk\n{} {:.1}%   {} {:.1}%   {} {:.1}%",
             l.cpu, h.cpu_percent, l.mem, h.memory_percent, l.disk, h.disk_percent
         );
         let _ = tray.set_tooltip(Some(&tip));

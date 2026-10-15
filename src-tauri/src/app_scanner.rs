@@ -162,7 +162,7 @@ fn icns_to_base64_png(icns_path: &Path, dir: &Path) -> Option<String> {
     let seq = ICON_SEQ.fetch_add(1, Ordering::Relaxed);
 
     let tmp = dir.join(format!(
-        "macslim_icon_{}_{}_{}.png",
+        "slimdisk_icon_{}_{}_{}.png",
         std::process::id(),
         seq,
         icns_path.file_stem()?.to_string_lossy()
