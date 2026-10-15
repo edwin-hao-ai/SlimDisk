@@ -58,6 +58,19 @@ ROOT = Path(__file__).resolve().parents[1]
 # 症状是脚本照常往下跑，截出来的却是一屏白。
 SHOT_APP = Path(os.environ.get("TMPDIR", "/tmp")) / "SlimDiskShot.app"
 REGION = "0,0,1440,900"
+
+# 主按钮 / 弹窗按钮的文案随语言变，AX 查找必须跟着变，否则 en-US 永远
+# 找不到「清理」CTA（原来是硬编码中文，en-US 直接 fail）。
+_UI = {"cta": "清理 ", "cancel": "取消", "confirm": "确认"}
+
+
+def set_ui_locale(locale: str) -> None:
+    global _UI
+    _UI = (
+        {"cta": "Clean ", "cancel": "Cancel", "confirm": "Run"}
+        if locale.startswith("en")
+        else {"cta": "清理 ", "cancel": "取消", "confirm": "确认"}
+    )
 CANVAS = (2880, 1800)
 CONTAINER = Path.home() / "Library/Containers/com.vgoapp.macslim/Data"
 DB_PATH = CONTAINER / "Library/Application Support/SlimDisk/slimdisk.db"
@@ -511,7 +524,7 @@ def _wait_dialog(ax: _drv.Ax, timeout: float) -> bool:
     deadline = time.time() + timeout
     while time.time() < deadline:
         titles = {n.title for n in _main_buttons(ax)}
-        if "取消" in titles and any(t.startswith("确认") for t in titles):
+        if _UI["cancel"] in titles and any(t.startswith(_UI["confirm"]) for t in titles):
             return True
         time.sleep(0.4)
     return False
@@ -520,7 +533,7 @@ def _wait_dialog(ax: _drv.Ax, timeout: float) -> bool:
 def shoot_confirm(out: Path, probe: Path) -> None:
     """第三拍：二次确认弹窗。用 AXPress 打开（见文件顶部关于坐标点击的说明）。"""
     ax = _ax()
-    cta = ax.main_button("清理 ")
+    cta = ax.main_button(_UI["cta"])
     if cta is None or cta.disabled:
         fail("找不到可用的「清理 …」主按钮")
     if not ax.press(cta.path, why="打开确认弹窗"):
@@ -541,7 +554,7 @@ def wait_fixture_gone(timeout: int = 40) -> None:
 def shoot_cleaned(out: Path, probe: Path) -> None:
     """第四拍：清理完成 —— 并核对它是真的删掉了，不只是界面变了。"""
     ax = _ax()
-    go = next((n for n in _main_buttons(ax) if n.title.startswith("确认") and not n.disabled), None)
+    go = next((n for n in _main_buttons(ax) if n.title.startswith(_UI["confirm"]) and not n.disabled), None)
     if go is None:
         fail("找不到「确认执行」按钮")
     if not ax.press(go.path, why="确认清理"):
@@ -589,6 +602,7 @@ def report(out: Path) -> None:
 
 def main() -> None:
     args = parse_args()
+    set_ui_locale(args.locale)
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     probe = Path("/tmp/_story_probe.png")
