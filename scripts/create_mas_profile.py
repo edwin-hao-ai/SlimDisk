@@ -29,7 +29,7 @@ profile 只能通过 App Store Connect API 签发，属于需要网络与凭据�
 python3 scripts/create_mas_profile.py
 
 # 只看现状，不联网（顺带核对签名里的沙箱权限）
-python3 scripts/create_mas_profile.py --show --app /path/to/MacSlim.app
+python3 scripts/create_mas_profile.py --show --app /path/to/SlimDisk.app
 ```
 
 ## 一个容易查错方向的地方
@@ -239,7 +239,7 @@ def profile_name(entitlements: dict) -> str:
     digest = hashlib.sha256(
         json.dumps(entitlements, sort_keys=True).encode("utf-8")
     ).hexdigest()[:8]
-    return f"MacSlim MAS 1.0 {digest}"
+    return f"SlimDisk MAS 1.0 {digest}"
 
 
 def find_reusable_profile(env: dict, name: str) -> dict | None:

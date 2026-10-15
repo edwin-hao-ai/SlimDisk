@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# MacSlim 更新发布脚本
+# SlimDisk 更新发布脚本
 #
 # 用法:
 #   ./scripts/publish-update.sh <version> "<release notes>" [arm|intel|universal]
@@ -15,10 +15,10 @@
 # 输出:
 #   - landing/updates/latest.json  新客户端更新清单
 #   - landing/updates/<platform>/0.1.0.json、0.2.2.json  旧客户端兼容清单
-#   - landing/downloads/MacSlim_<version>_<arch>.app.tar.gz(.sig,.build-stamp.json)
+#   - landing/downloads/SlimDisk_<version>_<arch>.app.tar.gz(.sig,.build-stamp.json)
 #
 # 部署:
-#   把 landing/ 整目录推到 https://edwin-hao-ai.github.io/MacSlim，并把版本化 updater 资产上传到对应 GitHub Release。
+#   把 landing/ 整目录推到 https://edwin-hao-ai.github.io/SlimDisk，并把版本化 updater 资产上传到对应 GitHub Release。
 
 set -euo pipefail
 
@@ -80,7 +80,7 @@ if [ -n "${TAURI_SIGNING_PRIVATE_KEY_PATH:-}" ] && [ ! -f "$TAURI_SIGNING_PRIVAT
   exit 1
 fi
 
-UPDATER_SRC="src-tauri/target/${RUST_TARGET}/release/bundle/macos/MacSlim.app.tar.gz"
+UPDATER_SRC="src-tauri/target/${RUST_TARGET}/release/bundle/macos/SlimDisk.app.tar.gz"
 if [ ! -f "$UPDATER_SRC" ]; then
   echo "错误: 找不到 Tauri updater artifact $UPDATER_SRC" >&2
   echo "请先执行带 bundle.createUpdaterArtifacts 的 Tauri build" >&2
@@ -174,7 +174,7 @@ verify_existing_assets() {
   local current_arch="$2"
   local downloads_dir="${root_dir}/landing/downloads"
   shopt -s nullglob
-  local assets=("${downloads_dir}"/MacSlim_"${VERSION}"_*.app.tar.gz)
+  local assets=("${downloads_dir}"/SlimDisk_"${VERSION}"_*.app.tar.gz)
   if [ "${#assets[@]}" -eq 0 ]; then
     return 0
   fi
@@ -182,7 +182,7 @@ verify_existing_assets() {
   local seen_platforms=""
   for asset in "${assets[@]}"; do
     local asset_name="${asset##*/}"
-    local asset_arch="${asset_name#MacSlim_${VERSION}_}"
+    local asset_arch="${asset_name#SlimDisk_${VERSION}_}"
     asset_arch="${asset_arch%.app.tar.gz}"
     local asset_target
     asset_target="$(target_for_arch "$asset_arch" "$asset_name")" || return 1
@@ -206,7 +206,7 @@ if [ "${MACSlim_PUBLISH_PREFLIGHT_ONLY:-}" = "1" ]; then
   exit 0
 fi
 
-STAGING_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/macslim-publish.XXXXXX")"
+STAGING_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/slimdisk-publish.XXXXXX")"
 cleanup() {
   local status=$?
   if [ -n "${STAGING_ROOT:-}" ] && [ -d "$STAGING_ROOT" ]; then
@@ -218,14 +218,14 @@ trap cleanup EXIT
 STAGING_DOWNLOAD_DIR="${STAGING_ROOT}/landing/downloads"
 STAGING_UPDATE_DIR="${STAGING_ROOT}/landing/updates"
 mkdir -p "$STAGING_DOWNLOAD_DIR" "$STAGING_UPDATE_DIR"
-UPDATER_BASENAME="MacSlim_${VERSION}_${ARCH}.app.tar.gz"
+UPDATER_BASENAME="SlimDisk_${VERSION}_${ARCH}.app.tar.gz"
 UPDATER_PATH="${STAGING_DOWNLOAD_DIR}/${UPDATER_BASENAME}"
 UPDATER_SIG_PATH="${UPDATER_PATH}.sig"
 UPDATER_STAMP_PATH="${UPDATER_PATH}.build-stamp.json"
 
 copy_existing_assets() {
   shopt -s nullglob
-  local assets=(landing/downloads/MacSlim_"${VERSION}"_*.app.tar.gz)
+  local assets=(landing/downloads/SlimDisk_"${VERSION}"_*.app.tar.gz)
   if [ "${#assets[@]}" -eq 0 ]; then
     return 0
   fi
@@ -245,7 +245,7 @@ verify_existing_assets "$STAGING_ROOT" "$ARCH"
 
 sign_staged_assets() {
   shopt -s nullglob
-  local assets=("$STAGING_DOWNLOAD_DIR"/MacSlim_"${VERSION}"_*.app.tar.gz)
+  local assets=("$STAGING_DOWNLOAD_DIR"/SlimDisk_"${VERSION}"_*.app.tar.gz)
   if [ "${#assets[@]}" -eq 0 ]; then
     return 0
   fi
@@ -282,7 +282,7 @@ download_dir = pathlib.Path(os.environ["DOWNLOAD_DIR"])
 update_dir = pathlib.Path(os.environ["UPDATE_DIR"])
 platforms = {}
 assets = {}
-pattern = re.compile(rf"^MacSlim_{re.escape(version)}_([A-Za-z0-9_-]+)\.app\.tar\.gz$")
+pattern = re.compile(rf"^SlimDisk_{re.escape(version)}_([A-Za-z0-9_-]+)\.app\.tar\.gz$")
 arch_platforms = {
     "aarch64": ("darwin-aarch64",),
     "x64": ("darwin-x86_64",),
@@ -296,7 +296,7 @@ for path in sorted(download_dir.iterdir()):
         continue
     match = pattern.fullmatch(path.name)
     if match is None:
-        if path.name.startswith(f"MacSlim_{version}_") and not path.name.endswith(".sig"):
+        if path.name.startswith(f"SlimDisk_{version}_") and not path.name.endswith(".sig"):
             raise SystemExit(f"错误: updater 资产 basename 不符合契约: {path.name}")
         continue
     arch = match.group(1)
@@ -343,7 +343,7 @@ for path in sorted(download_dir.iterdir()):
             raise SystemExit(f"错误: updater 平台匹配重复: {platform}")
         platforms[platform] = {
             "signature": signature,
-            "url": f"https://github.com/edwin-hao-ai/MacSlim/releases/download/v{version}/{quote(path.name)}",
+            "url": f"https://github.com/edwin-hao-ai/SlimDisk/releases/download/v{version}/{quote(path.name)}",
         }
 
 if not platforms:
@@ -380,4 +380,4 @@ echo "   Manifest:  landing/updates/latest.json"
 echo "   Compat:    landing/updates/darwin-aarch64/0.1.0.json, landing/updates/darwin-aarch64/0.2.2.json"
 echo ""
 echo "下一步：把 landing/ 部署到 GitHub Pages，并把版本化 updater 资产上传到对应 GitHub Release"
-echo "已安装 MacSlim 的用户在「设置」→「检查更新」会看到新版本"
+echo "已安装 SlimDisk 的用户在「设置」→「检查更新」会看到新版本"

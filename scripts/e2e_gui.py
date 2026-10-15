@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MacSlim 发布 go/no-go 门禁 —— 21 项 e2e 回归。
+"""SlimDisk 发布 go/no-go 门禁 —— 21 项 e2e 回归。
 
 需求来源：`docs/superpowers/mas-feasibility-and-e2e-release-gate.md` §3。
 
@@ -25,9 +25,9 @@ DOM 属性（`disabled` / `checked`）走**无障碍树投影**读取：WKWebVie
 
 | 破坏性检查 | 自造目标 | 造法 |
 | :--- | :--- | :--- |
-| 2 缓存清理 | `~/Library/Caches/macslim-e2e-sac-<uuid>` | 脚本 `mkdir` + 写 8 MiB |
+| 2 缓存清理 | `~/Library/Caches/slimdisk-e2e-sac-<uuid>` | 脚本 `mkdir` + 写 8 MiB |
 | 3 进程终止 | `/bin/sleep` 牺牲进程 | 脚本 `Popen` |
-| 7 / 8 应用卸载 | `~/Applications/MacSlimE2E-<uuid>.app` | 脚本拼 bundle + `chmod +x` |
+| 7 / 8 应用卸载 | `~/Applications/SlimDiskE2E-<uuid>.app` | 脚本拼 bundle + `chmod +x` |
 | 6 优雅退出 | 同上（MANUAL，系统弹窗无法自动取消） | 同上 |
 
 每一项破坏性检查都带**反向断言**（「不该发生的没发生」）：一个未被选中的对照牺牲
@@ -101,7 +101,7 @@ def execute(entry: dict, launch: bool) -> reg.CheckResult:
 
 
 def print_list() -> None:
-    print(f"MacSlim e2e 发布门禁 —— 共 {len(reg.CHECKS)} 项（--list 不执行任何动作）\n")
+    print(f"SlimDisk e2e 发布门禁 —— 共 {len(reg.CHECKS)} 项（--list 不执行任何动作）\n")
     width = max(len(c["title"]) for c in reg.CHECKS) + 2
     for entry in reg.CHECKS:
         note = f"  [{entry['note']}]" if entry["note"] else ""
@@ -109,8 +109,8 @@ def print_list() -> None:
     print(
         "\n破坏性检查（2 / 3 / 8）会真的删文件、真的杀进程，但目标全部由脚本自己造：\n"
         "  · /bin/sleep 牺牲进程\n"
-        "  · ~/Library/Caches/macslim-e2e-sac-*（脚本 mkdir + 写 8MiB）\n"
-        "  · ~/Applications/MacSlimE2E-*.app（脚本拼 bundle）\n"
+        "  · ~/Library/Caches/slimdisk-e2e-sac-*（脚本 mkdir + 写 8MiB）\n"
+        "  · ~/Applications/SlimDiskE2E-*.app（脚本拼 bundle）\n"
         "每项都带反向断言；`verify:e2e` 不并入 `verify`。"
     )
 
@@ -128,11 +128,11 @@ def select(only: list[str]) -> list[dict]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="MacSlim 发布 go/no-go 门禁（21 项 e2e 回归）")
+    parser = argparse.ArgumentParser(description="SlimDisk 发布 go/no-go 门禁（21 项 e2e 回归）")
     parser.add_argument("--list", action="store_true", help="只列检查项，不执行")
     parser.add_argument("--only", action="append", default=[], help="只跑指定编号，可重复")
     parser.add_argument(
-        "--no-launch", action="store_true", help="MacSlim 未运行时不自动拉起"
+        "--no-launch", action="store_true", help="SlimDisk 未运行时不自动拉起"
     )
     args = parser.parse_args(argv)
 

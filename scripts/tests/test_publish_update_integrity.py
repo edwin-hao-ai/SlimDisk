@@ -100,10 +100,10 @@ class PublishIntegrityTests(unittest.TestCase):
         self, workspace: pathlib.Path, target: str, suffix: bytes = b""
     ) -> pathlib.Path:
         rust_target, _, architecture = TARGETS[target]
-        path = workspace / "src-tauri/target" / rust_target / "release/bundle/macos/MacSlim.app.tar.gz"
+        path = workspace / "src-tauri/target" / rust_target / "release/bundle/macos/SlimDisk.app.tar.gz"
         path.parent.mkdir(parents=True, exist_ok=True)
         app = helpers.make_app(
-            path.parent / "MacSlim.app",
+            path.parent / "SlimDisk.app",
             version=VERSION,
             architecture=architecture,
             executable_suffix=suffix,
@@ -165,8 +165,8 @@ class PublishIntegrityTests(unittest.TestCase):
         source = self.source_archive(workspace, "arm")
         members = helpers.app_members(
             helpers.info_member(version=VERSION),
-            helpers.make_member("MacSlim.app/Contents/Resources/tampered", b"tampered"),
-            extra_directories=("MacSlim.app/Contents/Resources/",),
+            helpers.make_member("SlimDisk.app/Contents/Resources/tampered", b"tampered"),
+            extra_directories=("SlimDisk.app/Contents/Resources/",),
         )
         helpers.write_members(source, members)
         completed = self.run_publish(workspace, env, "arm")
@@ -178,7 +178,7 @@ class PublishIntegrityTests(unittest.TestCase):
     def test_rejects_existing_asset_with_wrong_target(self) -> None:
         workspace, env, log = self.workspace("wrong-existing-target")
         self.source_archive(workspace, "arm")
-        extra = workspace / "landing/downloads" / f"MacSlim_{VERSION}_x64.app.tar.gz"
+        extra = workspace / "landing/downloads" / f"SlimDisk_{VERSION}_x64.app.tar.gz"
         extra.parent.mkdir(parents=True)
         helpers.make_archive(extra, version=VERSION, architecture="arm64")
         helpers.write_test_stamp(extra, "aarch64-apple-darwin")
@@ -210,7 +210,7 @@ class PublishIntegrityTests(unittest.TestCase):
     def test_rejects_existing_same_version_asset_without_sidecar(self) -> None:
         workspace, env, log = self.workspace("missing-sidecar")
         self.source_archive(workspace, "arm")
-        extra = workspace / "landing/downloads" / f"MacSlim_{VERSION}_x64.app.tar.gz"
+        extra = workspace / "landing/downloads" / f"SlimDisk_{VERSION}_x64.app.tar.gz"
         extra.parent.mkdir(parents=True)
         helpers.make_archive(extra, version=VERSION, architecture="x86_64")
         pathlib.Path(f"{extra}.sig").write_text("stale-signature", encoding="utf-8")
@@ -224,7 +224,7 @@ class PublishIntegrityTests(unittest.TestCase):
     def test_rewrites_every_same_version_signature_from_current_signer(self) -> None:
         workspace, env, log = self.workspace("rewrite-signatures")
         self.source_archive(workspace, "arm")
-        extra = workspace / "landing/downloads" / f"MacSlim_{VERSION}_x64.app.tar.gz"
+        extra = workspace / "landing/downloads" / f"SlimDisk_{VERSION}_x64.app.tar.gz"
         extra.parent.mkdir(parents=True)
         helpers.make_archive(extra, version=VERSION, architecture="x86_64")
         helpers.write_test_stamp(extra, "x86_64-apple-darwin")
@@ -232,7 +232,7 @@ class PublishIntegrityTests(unittest.TestCase):
         completed = self.run_publish(workspace, env, "arm")
         output = completed.stdout + completed.stderr
         self.assertEqual(completed.returncode, 0, output)
-        current = workspace / "landing/downloads" / f"MacSlim_{VERSION}_aarch64.app.tar.gz"
+        current = workspace / "landing/downloads" / f"SlimDisk_{VERSION}_aarch64.app.tar.gz"
         self.assertEqual(pathlib.Path(f"{current}.sig").read_text(), f"fresh-{current.name}")
         self.assertEqual(pathlib.Path(f"{extra}.sig").read_text(), f"fresh-{extra.name}")
         self.assertTrue(pathlib.Path(f"{current}.build-stamp.json").is_file())
@@ -255,7 +255,7 @@ class PublishIntegrityTests(unittest.TestCase):
         self.source_archive(workspace, "arm", suffix=b"old")
         first = self.run_publish(workspace, env, "arm")
         self.assertEqual(first.returncode, 0, first.stdout + first.stderr)
-        asset = workspace / "landing/downloads" / f"MacSlim_{VERSION}_aarch64.app.tar.gz"
+        asset = workspace / "landing/downloads" / f"SlimDisk_{VERSION}_aarch64.app.tar.gz"
         signature = pathlib.Path(f"{asset}.sig")
         manifest = workspace / "landing/updates/latest.json"
         old_asset = asset.read_bytes()
@@ -292,7 +292,7 @@ class PublishIntegrityTests(unittest.TestCase):
                 output = completed.stdout + completed.stderr
                 self.assertEqual(completed.returncode, 0, output)
                 _, arch, _ = TARGETS[target]
-                asset = workspace / "landing/downloads" / f"MacSlim_{VERSION}_{arch}.app.tar.gz"
+                asset = workspace / "landing/downloads" / f"SlimDisk_{VERSION}_{arch}.app.tar.gz"
                 self.assertTrue(asset.is_file())
                 self.assertTrue(pathlib.Path(f"{asset}.build-stamp.json").is_file())
                 self.assertTrue(pathlib.Path(f"{asset}.sig").is_file())
@@ -310,7 +310,7 @@ class PublishIntegrityTests(unittest.TestCase):
     def test_preflight_rejects_mixed_universal_and_arm_platforms(self) -> None:
         workspace, env, log = self.workspace("mixed-platform-preflight")
         self.source_archive(workspace, "arm")
-        extra = workspace / "landing/downloads" / f"MacSlim_{VERSION}_universal.app.tar.gz"
+        extra = workspace / "landing/downloads" / f"SlimDisk_{VERSION}_universal.app.tar.gz"
         extra.parent.mkdir(parents=True)
         helpers.make_archive(extra, version=VERSION, architecture="universal")
         helpers.write_test_stamp(extra, "universal-apple-darwin")
@@ -325,7 +325,7 @@ class PublishIntegrityTests(unittest.TestCase):
         content = SCRIPT_PATH.read_text(encoding="utf-8")
         for marker in (
             ".app.tar.gz",
-            "MacSlim_${VERSION}_${ARCH}.app.tar.gz",
+            "SlimDisk_${VERSION}_${ARCH}.app.tar.gz",
             "updater_artifact.py verify",
             "UPDATER_SRC_STAMP_PATH",
             "STAGING_ROOT",

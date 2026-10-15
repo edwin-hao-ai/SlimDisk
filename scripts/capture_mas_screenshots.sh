@@ -45,8 +45,8 @@ case "$SHOT_LOCALE" in
     exit 2
     ;;
 esac
-SRC="${MAS_APP:-$HOME/.cargo/shared-target-mas/aarch64-apple-darwin/release/bundle/macos/MacSlim.app}"
-SHOT_APP="${TMPDIR:-/tmp}/MacSlimShot.app"
+SRC="${MAS_APP:-$HOME/.cargo/shared-target-mas/aarch64-apple-darwin/release/bundle/macos/SlimDisk.app}"
+SHOT_APP="${TMPDIR:-/tmp}/SlimDiskShot.app"
 # 与 App Store 认可的尺寸对应：1280x800 点 = 2560x1600 像素
 WINDOW_W=1280
 WINDOW_H=800
@@ -88,7 +88,7 @@ idx=0
 cleanup() {
   cd "$ROOT"
   git checkout -- src/App.tsx src-tauri/tauri.conf.json src/i18n/index.tsx 2>/dev/null || true
-  pkill -x macslim 2>/dev/null || true
+  pkill -x slimdisk 2>/dev/null || true
   rm -rf "$SHOT_APP"
 }
 trap cleanup EXIT
@@ -96,7 +96,7 @@ trap cleanup EXIT
 mkdir -p "$OUT"
 
 launch_shootable() {
-  pkill -x macslim 2>/dev/null || true
+  pkill -x slimdisk 2>/dev/null || true
   sleep 1
   rm -rf "$SHOT_APP"
   cp -R "$SRC" "$SHOT_APP"
@@ -138,7 +138,7 @@ IDLE_DELTA=0.30
 
 cpu_time() {
   # macOS 的 ps TIME 是 [[dd-]hh:]mm:ss.ss，取小数秒部分统一成数字
-  ps -o time= -p "$(pgrep -x macslim | head -1)" 2>/dev/null |
+  ps -o time= -p "$(pgrep -x slimdisk | head -1)" 2>/dev/null |
     awk '{ gsub("-", "", $1); n = split($1, p, ":");
            s = 0;
            for (i = 1; i <= n; i++) s = s * 60 + p[i];
@@ -234,7 +234,7 @@ PY
   size=$(sips -g pixelWidth -g pixelHeight "$out" \
     | awk '/pixelWidth/{w=$2}/pixelHeight/{h=$2}END{print w"x"h}')
   echo "  $label → $(basename "$out") ($size)"
-  pkill -x macslim 2>/dev/null || true
+  pkill -x slimdisk 2>/dev/null || true
 done
 
 echo

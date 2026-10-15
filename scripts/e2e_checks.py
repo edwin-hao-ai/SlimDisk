@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MacSlim e2e 门禁的破坏性主链路（第 1-8 项）与 Broker 不变量（第 9-12 项）。"""
+"""SlimDisk e2e 门禁的破坏性主链路（第 1-8 项）与 Broker 不变量（第 9-12 项）。"""
 from __future__ import annotations
 
 import subprocess
@@ -340,7 +340,7 @@ def _open_uninstaller(app: App, restart: bool = True) -> None:
     （`UninstallerView.tsx:123`），外加一个刷新按钮（`:353`）。开发中这一项写的是
     「找扫描按钮然后点」，永远找不到，直接把第 7/8/17 项全部判成 SKIP。
 
-    ⚠️ **默认会先重启 MacSlim**（`restart=True`）。后端的应用列表有 600 秒缓存
+    ⚠️ **默认会先重启 SlimDisk**（`restart=True`）。后端的应用列表有 600 秒缓存
     （`app_scanner.rs:288` `APP_SCAN_CACHE_TTL`），而自造 app 是在缓存建立**之后**
     造出来的 —— 不重启就最多 10 分钟扫不到它，实测表现为「按数字过滤后仍找不到
     自建 app」。刷新按钮也只会重跑一次被缓存挡住的扫描。重启让缓存回冷，
@@ -389,7 +389,7 @@ def _require_app_in_list(app: App, bundle: Path, budget: int = 600) -> None:
 
     ⚠️ 后端有 **600 秒的应用列表缓存**（`app_scanner.rs:288` `APP_SCAN_CACHE_TTL`）。
     自造 app 若造在缓存之后，最多 10 分钟扫不到它。`_open_uninstaller(restart=True)`
-    已经通过重启 MacSlim 把缓存清掉了；这里仍然兜一层，是因为重启失败/被跳过时
+    已经通过重启 SlimDisk 把缓存清掉了；这里仍然兜一层，是因为重启失败/被跳过时
     不该把「环境没准备好」报成「找不到目标」。
     """
     term = drv.app_search_term(bundle)
@@ -400,7 +400,7 @@ def _require_app_in_list(app: App, bundle: Path, budget: int = 600) -> None:
             f"按「{term}」过滤后仍找不到自建假 app：{bundle}。\n"
             "最可能的原因：后端有 600s 的应用列表缓存"
             "（`app_scanner.rs:288` `APP_SCAN_CACHE_TTL`），自造 app 造在缓存之后。\n"
-            "解法：先造好自造 app，再**重启 MacSlim**，然后重跑本项。"
+            "解法：先造好自造 app，再**重启 SlimDisk**，然后重跑本项。"
         )
 
 
@@ -734,10 +734,10 @@ def check_03(app: App) -> CheckResult:
         if not drv.pid_alive(bystander.pid):
             raise CheckFailure("反向断言失败：未勾选的对照进程被杀了")
         if not drv.pid_alive(app.ax.pid()):
-            raise CheckFailure("反向断言失败：MacSlim 自己被杀了")
+            raise CheckFailure("反向断言失败：SlimDisk 自己被杀了")
         return ok(
             check_03,
-            f"PID {victim.pid} 已死亡；对照 PID {bystander.pid} 与 MacSlim 仍存活",
+            f"PID {victim.pid} 已死亡；对照 PID {bystander.pid} 与 SlimDisk 仍存活",
             {
                 "victim_pid": victim.pid,
                 "victim_name_in_ui": picked["row"]["name"],

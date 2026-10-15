@@ -29,7 +29,7 @@ def _is_selected(relative: Path, version: str) -> bool:
     if len(parts) != 3 or parts[:2] != ("landing", "downloads"):
         return False
     name = parts[-1]
-    prefix = f"MacSlim_{version}_"
+    prefix = f"SlimDisk_{version}_"
     return name.startswith(prefix) and name.endswith(ASSET_SUFFIXES)
 
 

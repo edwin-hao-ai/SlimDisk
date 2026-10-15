@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MacSlim e2e 门禁的结果模型与注册表（`scripts/e2e_gui.py` / `e2e_checks.py` 共用）。
+"""SlimDisk e2e 门禁的结果模型与注册表（`scripts/e2e_gui.py` / `e2e_checks.py` 共用）。
 
 拆成独立模块是为了让「模型」和「检查实现」都能待在 AGENTS.md §7.1 的文件行数上限内，
 同时不引入 `scripts/e2e_gate/` 这类子目录 —— 子目录会躲过
@@ -44,12 +44,12 @@ RELEASE_DMG_GLOBS = (
 SAFETY_SELF_AUDIT = {
     "principle": "所有破坏性目标都由脚本自己造，绝不选中用户真实数据",
     "destructive_targets": {
-        "2": "~/Library/Caches/macslim-e2e-sac-<tag>-<uuid10>（脚本 mkdir + 写 8MiB，finally rmtree）",
+        "2": "~/Library/Caches/slimdisk-e2e-sac-<tag>-<uuid10>（脚本 mkdir + 写 8MiB，finally rmtree）",
         "3": "/bin/sleep 牺牲进程（脚本 Popen，finally kill）",
-        "7": "~/Applications/MacSlimE2E-cancel-<uuid8>.app（只取消不卸载，finally rmtree）",
-        "8": "~/Applications/MacSlimE2E-uninstall-<uuid8>.app（finally rmtree）+ 对照 bundle",
-        "17": "~/Applications/MacSlimE2E-residue-<uuid8>.app（finally rmtree）",
-        "6": "~/Applications/MacSlimE2E-quit-<uuid8>.app（MANUAL，finally pkill + rmtree）",
+        "7": "~/Applications/SlimDiskE2E-cancel-<uuid8>.app（只取消不卸载，finally rmtree）",
+        "8": "~/Applications/SlimDiskE2E-uninstall-<uuid8>.app（finally rmtree）+ 对照 bundle",
+        "17": "~/Applications/SlimDiskE2E-residue-<uuid8>.app（finally rmtree）",
+        "6": "~/Applications/SlimDiskE2E-quit-<uuid8>.app（MANUAL，finally pkill + rmtree）",
     },
     "never_targeted": [
         "用户真实进程（第 3/9/11 项只按脚本 spawn 的 PID 精确搜索，绝不做全选）",
@@ -58,7 +58,7 @@ SAFETY_SELF_AUDIT = {
         "任何 ~/.npm / ~/.cargo / Docker / Xcode 缓存（第 1 项只点取消）",
     ],
     "reverse_assertions": [
-        "3: 未勾选的对照 sleep 进程必须仍存活，且 MacSlim 自身 PID 不变",
+        "3: 未勾选的对照 sleep 进程必须仍存活，且 SlimDisk 自身 PID 不变",
         "2: 未勾选的对照缓存目录必须仍存在",
         "8: 未勾选的对照 bundle 必须仍存在",
         "1/7: 取消后 SQLite 历史表行数必须零新增",

@@ -87,9 +87,9 @@ class SecurityConfigTests(unittest.TestCase):
                 self.assertIn('ARCH="x64"', content)
                 self.assertIn('RUST_TARGET="universal-apple-darwin"', content)
                 self.assertIn('ARCH="universal"', content)
-                self.assertIn('DMG_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/dmg/MacSlim_${VERSION}_${ARCH}.dmg"', content)
+                self.assertIn('DMG_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/dmg/SlimDisk_${VERSION}_${ARCH}.dmg"', content)
                 self.assertNotIn("DMG_PATHS", content)
-                self.assertNotIn("MacSlim_*.dmg", content)
+                self.assertNotIn("SlimDisk_*.dmg", content)
                 self.assertNotIn("head", content)
                 self.assertIn('$TIMESTAMP_FLAG', (SCRIPTS_DIR / "sign.sh").read_text(encoding="utf-8"))
 
@@ -98,8 +98,8 @@ class SecurityConfigTests(unittest.TestCase):
             with self.subTest(script=name):
                 content = (SCRIPTS_DIR / name).read_text(encoding="utf-8")
                 content = content.replace(
-                    'DMG_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/dmg/MacSlim_${VERSION}_${ARCH}.dmg"',
-                    'DMG_PATHS=(src-tauri/target/${RUST_TARGET}/release/bundle/dmg/MacSlim_*.dmg)\nDMG_PATH="${DMG_PATHS[0]}"',
+                    'DMG_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/dmg/SlimDisk_${VERSION}_${ARCH}.dmg"',
+                    'DMG_PATHS=(src-tauri/target/${RUST_TARGET}/release/bundle/dmg/SlimDisk_*.dmg)\nDMG_PATH="${DMG_PATHS[0]}"',
                 )
                 errors = MODULE.validate_release_contracts({f"scripts/{name}": content})
                 self.assertTrue(any("DMG" in error or "精确" in error for error in errors))
@@ -778,7 +778,7 @@ set -euo pipefail
         output = completed.stdout + completed.stderr
         self.assertEqual(completed.returncode, 0, output)
         self.assertIn("安全配置校验通过", output)
-        self.assertNotIn("macslim-dev-pw", output)
+        self.assertNotIn("slimdisk-dev-pw", output)
 
     def test_validator_entrypoint_does_not_write_bytecode(self):
         with tempfile.TemporaryDirectory() as cache_directory:

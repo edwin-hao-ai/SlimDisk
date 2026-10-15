@@ -26,9 +26,9 @@ class PublishAssetsTests(unittest.TestCase):
         return path
 
     def seed_version(self, root: pathlib.Path, marker: bytes) -> None:
-        self.write_file(root, "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz", marker + b"-asset")
-        self.write_file(root, "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz.build-stamp.json", marker + b"-stamp")
-        self.write_file(root, "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz.sig", marker + b"-sig")
+        self.write_file(root, "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz", marker + b"-asset")
+        self.write_file(root, "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz.build-stamp.json", marker + b"-stamp")
+        self.write_file(root, "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz.sig", marker + b"-sig")
         self.write_file(root, "landing/updates/latest.json", marker + b"-latest")
         for platform in ("darwin-aarch64", "darwin-x86_64"):
             for compat in ("0.1.0.json", "0.2.2.json"):
@@ -38,14 +38,14 @@ class PublishAssetsTests(unittest.TestCase):
         self.seed_version(self.staging, b"new")
         nested = self.write_file(
             self.staging,
-            "landing/downloads/nested/MacSlim_0.2.2_aarch64.app.tar.gz",
+            "landing/downloads/nested/SlimDisk_0.2.2_aarch64.app.tar.gz",
             b"nested",
         )
         selected = publish_assets.select_commit_files(self.staging, "0.2.2")
         expected = {
-            pathlib.Path("landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz"),
-            pathlib.Path("landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz.build-stamp.json"),
-            pathlib.Path("landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz.sig"),
+            pathlib.Path("landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz"),
+            pathlib.Path("landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz.build-stamp.json"),
+            pathlib.Path("landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz.sig"),
             pathlib.Path("landing/updates/latest.json"),
             pathlib.Path("landing/updates/darwin-aarch64/0.1.0.json"),
             pathlib.Path("landing/updates/darwin-aarch64/0.2.2.json"),
@@ -58,15 +58,15 @@ class PublishAssetsTests(unittest.TestCase):
     def test_commit_replaces_current_version_and_preserves_unrelated_files(self) -> None:
         self.seed_version(self.live, b"old")
         self.seed_version(self.staging, b"new")
-        self.write_file(self.live, "landing/downloads/MacSlim_0.1.0_aarch64.app.tar.gz", b"unrelated")
-        self.write_file(self.staging, "landing/downloads/MacSlim_0.1.0_aarch64.app.tar.gz", b"new-unrelated")
+        self.write_file(self.live, "landing/downloads/SlimDisk_0.1.0_aarch64.app.tar.gz", b"unrelated")
+        self.write_file(self.staging, "landing/downloads/SlimDisk_0.1.0_aarch64.app.tar.gz", b"new-unrelated")
         committed = publish_assets.commit_staged_assets(
             self.staging, self.live, "0.2.2"
         )
         expected = {
-            "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz",
-            "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz.build-stamp.json",
-            "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz.sig",
+            "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz",
+            "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz.build-stamp.json",
+            "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz.sig",
             "landing/updates/latest.json",
             "landing/updates/darwin-aarch64/0.1.0.json",
             "landing/updates/darwin-aarch64/0.2.2.json",
@@ -81,9 +81,9 @@ class PublishAssetsTests(unittest.TestCase):
             and relative != "landing/updates/latest.json"
         }
         expected_content = {
-            "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz": b"new-asset",
-            "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz.build-stamp.json": b"new-stamp",
-            "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz.sig": b"new-sig",
+            "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz": b"new-asset",
+            "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz.build-stamp.json": b"new-stamp",
+            "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz.sig": b"new-sig",
             "landing/updates/latest.json": b"new-latest",
             **compat_content,
         }
@@ -91,7 +91,7 @@ class PublishAssetsTests(unittest.TestCase):
             with self.subTest(relative=relative):
                 self.assertEqual((self.live / relative).read_bytes(), expected_content[relative])
         self.assertEqual(
-            (self.live / "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz").read_bytes(),
+            (self.live / "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz").read_bytes(),
             b"new-asset",
         )
         self.assertEqual(
@@ -99,7 +99,7 @@ class PublishAssetsTests(unittest.TestCase):
             b"new-latest",
         )
         self.assertEqual(
-            (self.live / "landing/downloads/MacSlim_0.1.0_aarch64.app.tar.gz").read_bytes(),
+            (self.live / "landing/downloads/SlimDisk_0.1.0_aarch64.app.tar.gz").read_bytes(),
             b"unrelated",
         )
 
@@ -130,7 +130,7 @@ class PublishAssetsTests(unittest.TestCase):
         downloads.mkdir(parents=True)
         outside = self.root / "outside-file"
         outside.write_bytes(b"outside")
-        (downloads / "MacSlim_0.2.2_aarch64.app.tar.gz").symlink_to(outside)
+        (downloads / "SlimDisk_0.2.2_aarch64.app.tar.gz").symlink_to(outside)
         with self.assertRaisesRegex(ValueError, "symlink|类型"):
             publish_assets.commit_staged_assets(self.staging, self.live, "0.2.2")
         self.assertEqual(outside.read_bytes(), b"outside")
@@ -148,7 +148,7 @@ class PublishAssetsTests(unittest.TestCase):
     def test_rejects_staging_ancestor_symlink(self) -> None:
         self.write_file(
             self.staging,
-            "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz",
+            "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz",
             b"new",
         )
         outside = self.root / "outside-updates"
@@ -210,11 +210,11 @@ class PublishAssetsTests(unittest.TestCase):
                 replace_func=failing_replace,
             )
         self.assertEqual(
-            (self.live / "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz").read_bytes(),
+            (self.live / "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz").read_bytes(),
             b"old-asset",
         )
         self.assertEqual(
-            (self.live / "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz.build-stamp.json").read_bytes(),
+            (self.live / "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz.build-stamp.json").read_bytes(),
             b"old-stamp",
         )
         self.assertEqual(
@@ -241,7 +241,7 @@ class PublishAssetsTests(unittest.TestCase):
         transactions = list(self.live.glob(".publish-assets-*"))
         self.assertEqual(len(transactions), 1)
         self.assertTrue(
-            (transactions[0] / "landing/downloads/MacSlim_0.2.2_aarch64.app.tar.gz").is_file()
+            (transactions[0] / "landing/downloads/SlimDisk_0.2.2_aarch64.app.tar.gz").is_file()
         )
 
 

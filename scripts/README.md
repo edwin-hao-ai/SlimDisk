@@ -23,7 +23,7 @@ bun run tauri build --debug --bundles app
 
 ```bash
 # 3. release/sign 成功后，确认当前 target 的 archive 由当前 app rebuild
-python3 scripts/updater_artifact.py rebuild --app "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/MacSlim.app" --archive "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/MacSlim.app.tar.gz" --target "aarch64-apple-darwin"
+python3 scripts/updater_artifact.py rebuild --app "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/SlimDisk.app" --archive "src-tauri/target/aarch64-apple-darwin/release/bundle/macos/SlimDisk.app.tar.gz" --target "aarch64-apple-darwin"
 ```
 
 ```bash
@@ -39,8 +39,8 @@ python3 scripts/updater_artifact.py rebuild --app "src-tauri/target/aarch64-appl
 ```bash
 TARGET=arm
 RUST_TARGET="aarch64-apple-darwin"
-APP_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/macos/MacSlim.app"
-ARCHIVE_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/macos/MacSlim.app.tar.gz"
+APP_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/macos/SlimDisk.app"
+ARCHIVE_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/macos/SlimDisk.app.tar.gz"
 ./scripts/release.sh "$TARGET"
 # 或：./scripts/sign.sh "$TARGET"（二选一）
 python3 scripts/updater_artifact.py rebuild --app "$APP_PATH" --archive "$ARCHIVE_PATH" --target "$RUST_TARGET"
@@ -63,7 +63,7 @@ python3 scripts/updater_artifact.py rebuild --app "$APP_PATH" --archive "$ARCHIV
 | config version | 版本参数必须严格等于 `src-tauri/tauri.conf.json` 的 `version` |
 | 禁止旧资产 | 不得手工复制旧 tar、不得手工修改 manifest、不得跨 target 复用 stamp |
 
-正式 updater 的 `.build-stamp.json` 只能由 `rebuild --app` 在重建当前 archive 后内部生成；不得使用公开 stamp CLI/API，不得手工编辑 stamp，也不得跨 target 复用 stamp。Updater 发布对象是版本化的 `MacSlim_<version>_<arch>.app.tar.gz(.sig,.build-stamp.json)`，不是 DMG；新客户端读取 `updates/latest.json`，旧客户端读取对应 platform 下的 `0.1.0.json` 与 `0.2.2.json`。
+正式 updater 的 `.build-stamp.json` 只能由 `rebuild --app` 在重建当前 archive 后内部生成；不得使用公开 stamp CLI/API，不得手工编辑 stamp，也不得跨 target 复用 stamp。Updater 发布对象是版本化的 `SlimDisk_<version>_<arch>.app.tar.gz(.sig,.build-stamp.json)`，不是 DMG；新客户端读取 `updates/latest.json`，旧客户端读取对应 platform 下的 `0.1.0.json` 与 `0.2.2.json`。
 
 `publish-update.sh` 必须携带并校验每个 asset 的 `build-stamp.json` sidecar；正式发布先执行只读 preflight，再复制到临时 staging，逐资产重签并生成 manifest，最后通过 `scripts/publish_assets.py commit` 事务提交当前版本文件。不得手工复制旧 tar、不得手工修改 manifest，也不得绕过 sidecar、staging 或事务 commit；失败会恢复旧 live 状态并保留其他版本资产。
 

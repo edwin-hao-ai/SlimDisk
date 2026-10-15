@@ -56,13 +56,13 @@ ROOT = Path(__file__).resolve().parents[1]
 # 必须和 _prepare_shot_app.sh 用同一个位置。macOS 上 TMPDIR 指向
 # /var/folders/.../T，写死 /tmp 会和构建脚本产出的副本对不上 ——
 # 症状是脚本照常往下跑，截出来的却是一屏白。
-SHOT_APP = Path(os.environ.get("TMPDIR", "/tmp")) / "MacSlimShot.app"
+SHOT_APP = Path(os.environ.get("TMPDIR", "/tmp")) / "SlimDiskShot.app"
 REGION = "0,0,1440,900"
 CANVAS = (2880, 1800)
 CONTAINER = Path.home() / "Library/Containers/com.vgoapp.macslim/Data"
-DB_PATH = CONTAINER / "Library/Application Support/MacSlim/macslim.db"
+DB_PATH = CONTAINER / "Library/Application Support/SlimDisk/slimdisk.db"
 GRANTS = CONTAINER / "Library/Application Support/folder-grants.json"
-FIXTURE_GLOB = "macslim-shot-fixture-*"
+FIXTURE_GLOB = "slimdisk-shot-fixture-*"
 # 注意：**不能**写 `Path.home() / "/Library/Logs"`。pathlib 的 `/` 运算符在
 # 右边是绝对路径时会整个丢弃左边，结果是系统的 `/Library/Logs` 而不是用户
 # 家目录下的那个 —— 而用户日志目录恰恰在后者。这个坑很安静：路径存在、
@@ -109,10 +109,10 @@ def spawn_app() -> None:
     failed`。而同样的包直接 exec 起来完全正常 —— 之前一直用 `open`，
     撞上这个之后表现为「脚本跑完，截出一屏白」，很容易误判成签名或沙箱问题。
     """
-    binary = SHOT_APP / "Contents/MacOS/macslim"
+    binary = SHOT_APP / "Contents/MacOS/slimdisk"
     if not binary.exists():
         fail(f"截图副本不存在：{binary}（先跑 scripts/_prepare_shot_app.sh）")
-    log = open("/tmp/macslim-shot-run.log", "ab")
+    log = open("/tmp/slimdisk-shot-run.log", "ab")
     subprocess.Popen(
         [str(binary)],
         stdout=log,
@@ -128,11 +128,11 @@ def capture(path: Path) -> Image.Image:
 
 
 def activate() -> None:
-    # 用 System Events 设 frontmost，而不是 `tell application "MacSlimShot"
+    # 用 System Events 设 frontmost，而不是 `tell application "SlimDiskShot"
     # to activate`：截图副本是直接 exec 起来的，没经过 LaunchServices 注册，
-    # 按 app 名发 AppleScript 有可能找不到它。进程名固定是 macslim。
+    # 按 app 名发 AppleScript 有可能找不到它。进程名固定是 slimdisk。
     run(["osascript", "-e",
-         'tell application "System Events" to tell process "macslim" '
+         'tell application "System Events" to tell process "slimdisk" '
          'to set frontmost to true'])
     time.sleep(2)
 
@@ -146,7 +146,7 @@ def click_button(name: str) -> bool:
     script = f'''
 on run argv
     set wantName to item 1 of argv
-    tell application "System Events" to tell process "macslim"
+    tell application "System Events" to tell process "slimdisk"
         try
             set elems to entire contents of window 1
         on error
@@ -366,7 +366,7 @@ def verify_grant_point(image: Image.Image) -> None:
 def window_names() -> list[str]:
     result = subprocess.run(
         ["osascript", "-e",
-         'tell application "System Events" to tell process "macslim" '
+         'tell application "System Events" to tell process "slimdisk" '
          'to get name of every window'],
         capture_output=True, text=True,
     )
@@ -438,7 +438,7 @@ def check_preconditions() -> None:
     if not logs.exists():
         fail(f"{logs} 不存在 —— 先跑 scripts/screenshot_fixture.sh up")
     if fixture_files() == 0:
-        fail("fixture 不在位（没有 macslim-shot-fixture-* 文件）")
+        fail("fixture 不在位（没有 slimdisk-shot-fixture-* 文件）")
 
 
 def clear_history() -> None:
@@ -454,7 +454,7 @@ def clear_history() -> None:
 def build_shot_app(locale: str) -> None:
     """构建并重签截图副本，拍完把改过的源码还原。
 
-    之前这里假定 `/tmp/MacSlimShot.app` 已经存在，「谁来构建」成了口头约定：
+    之前这里假定 `/tmp/SlimDiskShot.app` 已经存在，「谁来构建」成了口头约定：
     单独跑这个脚本就会因为副本不存在或签名不对而起不来 / 起成白屏。
     """
     locale_code = "zh-CN" if locale == "zh-Hans" else "en"
@@ -470,7 +470,7 @@ def build_shot_app(locale: str) -> None:
 
 def shoot_ungranted(out: Path) -> None:
     """第一拍：一个目录都没授权的真实初始态。"""
-    run(["pkill", "-x", "macslim"])
+    run(["pkill", "-x", "slimdisk"])
     time.sleep(2)
     spawn_app()
     time.sleep(16)

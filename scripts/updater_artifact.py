@@ -17,7 +17,7 @@ from pathlib import Path
 from xml.parsers.expat import ExpatError
 
 
-APP_NAME = "MacSlim.app"
+APP_NAME = "SlimDisk.app"
 INFO_NAME = f"{APP_NAME}/Contents/Info.plist"
 SCHEMA_VERSION = 2
 HASH_CHUNK_SIZE = 1024 * 1024
@@ -153,7 +153,7 @@ def _safe_member_name(member: tarfile.TarInfo) -> str:
         raise ValueError("updater archive 包含不安全路径")
     nested_app = any(part.casefold().endswith(".app") for part in parts[1:])
     if parts[0] != APP_NAME or nested_app:
-        raise ValueError("updater archive 必须包含且只包含一个 MacSlim.app")
+        raise ValueError("updater archive 必须包含且只包含一个 SlimDisk.app")
     if canonical == APP_NAME and not member.isdir():
         raise ValueError("updater archive 包含不安全路径")
     if name.endswith("/") and not member.isdir():
@@ -201,7 +201,7 @@ def _validated_info_member(members: list[tarfile.TarInfo]) -> tarfile.TarInfo:
             info_members.append(member)
     root = entries.get(APP_KEY)
     if root is None or root[0] != APP_NAME or root[1] != "directory":
-        raise ValueError("updater archive 必须包含且只包含一个 MacSlim.app")
+        raise ValueError("updater archive 必须包含且只包含一个 SlimDisk.app")
     for member_name, _, _ in entries.values():
         if member_name != APP_NAME:
             _validate_ancestors(member_name, entries)
@@ -453,7 +453,7 @@ def _invalidate_artifacts(archive: Path) -> None:
 
 def _validate_app_tree(app_path: Path) -> None:
     if app_path.name != APP_NAME or app_path.is_symlink() or not app_path.is_dir():
-        raise ValueError("rebuild 的 app 根目录必须是 MacSlim.app")
+        raise ValueError("rebuild 的 app 根目录必须是 SlimDisk.app")
     pending = [app_path]
     while pending:
         directory = pending.pop()
@@ -638,7 +638,7 @@ def _build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--target", required=True, help="target triple")
     verify.add_argument("--stamp", type=Path, help="build stamp 路径")
     rebuild_command = commands.add_parser("rebuild", help="从 app 重建 archive")
-    rebuild_command.add_argument("--app", type=Path, required=True, help="MacSlim.app 路径")
+    rebuild_command.add_argument("--app", type=Path, required=True, help="SlimDisk.app 路径")
     rebuild_command.add_argument("--archive", type=Path, required=True, help="gzip tar archive 路径")
     rebuild_command.add_argument("--target", required=True, help="target triple")
     return parser

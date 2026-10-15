@@ -66,7 +66,7 @@ TARGET="aarch64-apple-darwin"
 export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-$HOME/.cargo/shared-target-mas}"
 mkdir -p "$CARGO_TARGET_DIR"
 
-APP="${CARGO_TARGET_DIR}/${TARGET}/release/bundle/macos/MacSlim.app"
+APP="${CARGO_TARGET_DIR}/${TARGET}/release/bundle/macos/SlimDisk.app"
 ZIP_DIST="dist/mas"
 
 # 商店版本（给用户看的那一串）。从 tauri.conf.json 读而不是硬编码：
@@ -78,7 +78,7 @@ store_version() {
   python3 -c "import json;print(json.load(open('src-tauri/tauri.conf.json'))['version'])"
 }
 
-PKG_PATH="${ZIP_DIST}/MacSlim-$(store_version)-mas.pkg"
+PKG_PATH="${ZIP_DIST}/SlimDisk-$(store_version)-mas.pkg"
 
 # MAS 凭据里的 API key
 ENV_FILE="${MAS_ASC_ENV:-$HOME/.config/mddock/ios-release.env}"
@@ -112,9 +112,9 @@ build() {
 }
 
 strip_cli() {
-  # 从 MAS bundle 里删掉嵌套的 macslim-cli。
+  # 从 MAS bundle 里删掉嵌套的 slimdisk-cli。
   #
-  # 实测（2026-09-29）：**带沙箱的 macslim-cli 一起签名后启动即 SIGTRAP**，
+  # 实测（2026-09-29）：**带沙箱的 slimdisk-cli 一起签名后启动即 SIGTRAP**，
   # 崩溃栈全在 dyld 初始化阶段：
   #   _libsecinit_appsandbox → _os_activity_initicate_impl → libSystemInitializer
   #   → dyld::MachOAnalyzer::forEachInitializer
@@ -125,7 +125,7 @@ strip_cli() {
   # 而且它对 App Store 用户**毫无价值** —— 沙箱里 exec 不了外部工具，
   # 而 CLI 的存在意义正是驱动它们。桌面端是自带 CLI 的（不走沙箱）。
   info "剔除嵌套 CLI"
-  local cli="$APP/Contents/MacOS/macslim-cli"
+  local cli="$APP/Contents/MacOS/slimdisk-cli"
   if [ -f "$cli" ]; then
     rm -f "$cli"
     # 注意 `${cli}` 的花括号是必需的，不是风格问题。
@@ -183,8 +183,8 @@ install_privacy_manifest() {
 # 这个 warning 之前被 altool 淹没在输出里，而 upload 模式此前**从未跑通**
 # （`local` 之前就引用了未声明的变量），所以没人看到过它。
 sign_entitlements() {
-  local out="${CARGO_TARGET_DIR}/MacSlim-entitlements.plist"
-  local decoded="${CARGO_TARGET_DIR}/MacSlim-profile.plist"
+  local out="${CARGO_TARGET_DIR}/SlimDisk-entitlements.plist"
+  local decoded="${CARGO_TARGET_DIR}/SlimDisk-profile.plist"
 
   # profile 是 CMS 签名包，先解出明文 plist。
   security cms -D -i "$PROFILE" > "$decoded" 2>/dev/null || true
@@ -378,7 +378,7 @@ BUILD_KEYCHAIN=""
 BUILD_KEYCHAIN_PASSWORD=""
 
 build_signing_keychain() {
-  BUILD_KEYCHAIN="${TMPDIR:-/tmp}/macslim-build.keychain-db"
+  BUILD_KEYCHAIN="${TMPDIR:-/tmp}/slimdisk-build.keychain-db"
   BUILD_KEYCHAIN_PASSWORD="msl$(date +%s)"
   security delete-keychain "$BUILD_KEYCHAIN" 2>/dev/null || true
   security create-keychain -p "$BUILD_KEYCHAIN_PASSWORD" "$BUILD_KEYCHAIN" \

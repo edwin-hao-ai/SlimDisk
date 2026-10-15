@@ -59,7 +59,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = Path(
     os.environ.get(
         "MAS_DEV_PROFILE",
-        os.path.expanduser("~/.cargo/shared-target-mas/MacSlim-dev.provisionprofile"),
+        os.path.expanduser("~/.cargo/shared-target-mas/SlimDisk-dev.provisionprofile"),
     )
 )
 
@@ -122,7 +122,7 @@ def profile_name(entitlements: dict) -> str:
     digest = hashlib.sha256(
         json.dumps(entitlements, sort_keys=True).encode("utf-8")
     ).hexdigest()[:8]
-    return f"MacSlim screenshot dev {digest}"
+    return f"SlimDisk screenshot dev {digest}"
 
 
 def find_reusable(env: dict, name: str) -> str | None:

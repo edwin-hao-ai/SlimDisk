@@ -10,7 +10,7 @@
 #
 # 做法是**把真实内容移出去**，而不是删除：
 #
-#   1. 把 ~/Library/Logs 下的内容（含隐藏项）移进 ~/Library/macslim-shot-backup
+#   1. 把 ~/Library/Logs 下的内容（含隐藏项）移进 ~/Library/slimdisk-shot-backup
 #   2. 在空出来的 ~/Library/Logs 里造稀疏文件 fixture
 #   3. 用户走完授权 → 扫描 → 清理
 #   4. 删掉 fixture 残留，用 rsync 把真实内容合并回原位
@@ -50,8 +50,8 @@
 set -euo pipefail
 
 TARGET_DIR="${SHOT_FIXTURE_DIR:-$HOME/Library/Logs}"
-BACKUP_DIR="${SHOT_FIXTURE_BACKUP:-$HOME/Library/macslim-shot-backup}"
-FIXTURE_PREFIX="macslim-shot-fixture"
+BACKUP_DIR="${SHOT_FIXTURE_BACKUP:-$HOME/Library/slimdisk-shot-backup}"
+FIXTURE_PREFIX="slimdisk-shot-fixture"
 FIXTURE_SIZE="${SHOT_FIXTURE_SIZE:-5G}"
 
 fixture_file() { printf '%s/%s' "$TARGET_DIR" "$FIXTURE_PREFIX"; }
@@ -63,9 +63,9 @@ fixture_file() { printf '%s/%s' "$TARGET_DIR" "$FIXTURE_PREFIX"; }
 # 第一次实测往返就是 10M → 9.9M，而我无法说明它。
 #
 # manifest 放在 ~/Library 下、**不放**备份目录里：备份目录会被 rsync 进
-# Logs，manifest 混进去就变成 ~/Library/Logs/macslim-shot-fixture.manifest
+# Logs，manifest 混进去就变成 ~/Library/Logs/slimdisk-shot-fixture.manifest
 # 这种垃圾，还要再清理一次。
-MANIFEST="${SHOT_FIXTURE_MANIFEST:-$HOME/Library/macslim-shot-fixture.manifest}"
+MANIFEST="${SHOT_FIXTURE_MANIFEST:-$HOME/Library/slimdisk-shot-fixture.manifest}"
 
 # 目录项数（含目录与隐藏项）+ 文件字节总量。两项一起比才够：
 # 只比字节数会把「一个大文件换成两个小文件」这种变化漏掉。

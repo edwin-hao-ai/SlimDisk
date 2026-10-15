@@ -279,14 +279,14 @@ class ReleaseContractTests(unittest.TestCase):
                     encoding="utf-8",
                 )
                 target_root = workspace / "src-tauri/target/aarch64-apple-darwin/release/bundle"
-                archive = target_root / "macos/MacSlim.app.tar.gz"
+                archive = target_root / "macos/SlimDisk.app.tar.gz"
                 archive.parent.mkdir(parents=True)
                 archive.write_bytes(b"stale-archive")
                 pathlib.Path(f"{archive}.sig").write_text("stale-signature", encoding="utf-8")
                 pathlib.Path(f"{archive}.build-stamp.json").write_text("{}", encoding="utf-8")
-                (target_root / "macos/MacSlim.app").mkdir()
+                (target_root / "macos/SlimDisk.app").mkdir()
                 (target_root / "dmg").mkdir()
-                (target_root / "dmg/MacSlim_0.2.2_aarch64.dmg").write_bytes(b"dmg")
+                (target_root / "dmg/SlimDisk_0.2.2_aarch64.dmg").write_bytes(b"dmg")
                 security = bin_dir / "security"
                 security.write_text(
                     "#!/usr/bin/env bash\n"

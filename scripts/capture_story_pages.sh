@@ -29,10 +29,10 @@ VIEW="${3:?}"
 GRANTED="${4:-none}"
 
 MAS_TARGET="${CARGO_TARGET_DIR:-$HOME/.cargo/shared-target-mas}"
-APP="$MAS_TARGET/aarch64-apple-darwin/release/bundle/macos/MacSlim.app"
-SHOT_APP="${TMPDIR:-/tmp}/MacSlimShot.app"
+APP="$MAS_TARGET/aarch64-apple-darwin/release/bundle/macos/SlimDisk.app"
+SHOT_APP="${TMPDIR:-/tmp}/SlimDiskShot.app"
 GRANTS="$HOME/Library/Containers/com.vgoapp.macslim/Data/Library/Application Support/folder-grants.json"
-GRANTS_BACKUP="/tmp/macslim-grants-backup.json"
+GRANTS_BACKUP="/tmp/slimdisk-grants-backup.json"
 REGION="0,0,1440,900"
 
 cleanup() {
@@ -84,7 +84,7 @@ MIN_SETTLE=5
 MAX_SETTLE=120
 IDLE_DELTA=0.30
 cpu_time() {
-  ps -o time= -p "$(pgrep -x macslim | head -1)" 2>/dev/null |
+  ps -o time= -p "$(pgrep -x slimdisk | head -1)" 2>/dev/null |
     awk '{ gsub("-", "", $1); n = split($1, p, ":"); s = 0;
            for (i = 1; i <= n; i++) s = s * 60 + p[i];
            printf "%.2f\n", s }'
@@ -94,7 +94,7 @@ cpu_time() {
 # （/var/folders/.../T）里的 Development 签名 app 会直接失败：
 #   RBSRequestErrorDomain Code=5 / NSUnderlyingError 162 "Launchd job spawn failed"
 # 同一个包直接 exec 完全正常 —— 用 `open` 时症状是「脚本跑完，截出一屏白」。
-"$SHOT_APP/Contents/MacOS/macslim" >/tmp/macslim-shot-run.log 2>&1 &
+"$SHOT_APP/Contents/MacOS/slimdisk" >/tmp/slimdisk-shot-run.log 2>&1 &
 sleep "$MIN_SETTLE"
 waited=$MIN_SETTLE
 prev="$(cpu_time)"
@@ -117,7 +117,7 @@ out="$OUT/$VIEW.png"
 # 应用没在前台时截出来的是一片空白（实测：整张纯白、96 KB，连侧栏都没有）。
 # 所以：先激活、等窗口真的出现，再截；截完还要**验证不是空白**，失败就重试。
 activate_and_shoot() {
-  osascript -e 'tell application "MacSlimShot" to activate' >/dev/null 2>&1 || true
+  osascript -e 'tell application "SlimDiskShot" to activate' >/dev/null 2>&1 || true
   sleep 3
   screencapture -x -R "$REGION" -t png "$out"
 }
@@ -157,4 +157,4 @@ echo "  灰度标准差 ${std}（确认不是空白）"
 size=$(sips -g pixelWidth -g pixelHeight "$out" \
   | awk '/pixelWidth/{w=$2}/pixelHeight/{h=$2}END{print w"x"h}')
 echo "  $out ($size)"
-pkill -x macslim 2>/dev/null || true
+pkill -x slimdisk 2>/dev/null || true

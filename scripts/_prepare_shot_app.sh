@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 构建「截图专用」的 MAS app 并放到 /tmp/MacSlimShot.app。
+# 构建「截图专用」的 MAS app 并放到 /tmp/SlimDiskShot.app。
 #
 # 由 capture_story_beats.py（五拍故事线）和 capture_story_pages.sh（单页补拍）
 # 共用。抽出来是因为「构建 + 重签」是一整套有坑的步骤，复制两份必然漂移 ——
@@ -18,8 +18,8 @@ VIEW="${1:?用法: _prepare_shot_app.sh <view> <locale-code>}"
 LOCALE="${2:?}"
 
 MAS_TARGET="${CARGO_TARGET_DIR:-$HOME/.cargo/shared-target-mas}"
-APP="$MAS_TARGET/aarch64-apple-darwin/release/bundle/macos/MacSlim.app"
-SHOT_APP="${TMPDIR:-/tmp}/MacSlimShot.app"
+APP="$MAS_TARGET/aarch64-apple-darwin/release/bundle/macos/SlimDisk.app"
+SHOT_APP="${TMPDIR:-/tmp}/SlimDiskShot.app"
 
 cd "$ROOT"
 
@@ -74,7 +74,7 @@ fi
 #
 # 所以本地用 Development profile（macOS 接受它本地安装）+ Apple Development
 # 证书签一份副本。二进制不变，仍然是 --features mas 编出来的上架版。
-DEV_PROFILE="${MAS_DEV_PROFILE:-$HOME/.cargo/shared-target-mas/MacSlim-dev.provisionprofile}"
+DEV_PROFILE="${MAS_DEV_PROFILE:-$HOME/.cargo/shared-target-mas/SlimDisk-dev.provisionprofile}"
 [ -f "$DEV_PROFILE" ] || "$ROOT/scripts/create_screenshot_dev_profile.py"
 
 # 签名要跟 profile 里那张证书一致，否则设备/证书不匹配会被拒。
@@ -103,7 +103,7 @@ PY
 # entitlements = 沙箱那份 + profile 里的三个身份字段。
 # 身份字段必须补：缺了它们，沙箱内的 XPC 服务（WebKit 的 GPU 进程首当其冲）
 # 查不到注册信息，表现为「进程反复崩溃 → 整个 webview 纯白」，而不是签名报错。
-ENTITLEMENTS_TMP="$(mktemp -t macslim-shot-ent)"
+ENTITLEMENTS_TMP="$(mktemp -t slimdisk-shot-ent)"
 python3 - "$ROOT/src-tauri/entitlements.mas.plist" "$DEV_PROFILE" "$ENTITLEMENTS_TMP" <<'PY'
 import plistlib, subprocess, sys
 ent = plistlib.loads(open(sys.argv[1], "rb").read())

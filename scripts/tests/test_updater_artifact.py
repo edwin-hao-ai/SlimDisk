@@ -19,8 +19,8 @@ from scripts import updater_artifact
 
 SCRIPT_PATH = pathlib.Path(__file__).resolve().parents[1] / "updater_artifact.py"
 SYSTEM_PYTHON = "/usr/bin/python3"
-APP_NAME = "MacSlim.app"
-INFO_NAME = "MacSlim.app/Contents/Info.plist"
+APP_NAME = "SlimDisk.app"
+INFO_NAME = "SlimDisk.app/Contents/Info.plist"
 TARGET = "aarch64-apple-darwin"
 SENTINEL = "archive-content-sentinel"
 CPU_TYPE_X86_64 = 0x01000007
@@ -98,7 +98,7 @@ def info_data(
             "CFBundleIdentifier": identifier,
             "CFBundleShortVersionString": version,
             "CFBundleVersion": version if bundle_version is None else bundle_version,
-            "CFBundleExecutable": "MacSlim",
+            "CFBundleExecutable": "SlimDisk",
         }
     )
 
@@ -135,7 +135,7 @@ def app_members(
         *extra_directories,
     )
     executable = make_member(
-        f"{APP_NAME}/Contents/MacOS/MacSlim",
+        f"{APP_NAME}/Contents/MacOS/SlimDisk",
         architecture_fixture(architecture),
     )
     return [
@@ -185,7 +185,7 @@ def make_app(
     (contents / "Info.plist").write_bytes(
         info_data(version=version, identifier=identifier)
     )
-    (macos / "MacSlim").write_bytes(
+    (macos / "SlimDisk").write_bytes(
         architecture_fixture(architecture) + executable_suffix
     )
     if symlink_target is not None:
@@ -235,7 +235,7 @@ class UpdaterArtifactTests(unittest.TestCase):
         temporary_directory = tempfile.TemporaryDirectory()
         self.addCleanup(temporary_directory.cleanup)
         self.root = pathlib.Path(temporary_directory.name)
-        self.archive = self.root / "MacSlim.app.tar.gz"
+        self.archive = self.root / "SlimDisk.app.tar.gz"
 
     def inspect(self, target=None) -> dict[str, object]:
         arguments = {
@@ -297,7 +297,7 @@ class UpdaterArtifactTests(unittest.TestCase):
         self.assertNotEqual(file_sha256(self.archive), old_hash)
         updater_artifact.verify_stamp(self.archive, TARGET)
         with tarfile.open(self.archive, "r:gz") as archive:
-            member = archive.getmember(f"{APP_NAME}/Contents/MacOS/MacSlim")
+            member = archive.getmember(f"{APP_NAME}/Contents/MacOS/SlimDisk")
             self.assertTrue(archive.extractfile(member).read().endswith(b"current"))
 
     def test_rebuild_failure_removes_old_artifacts(self) -> None:
@@ -362,7 +362,7 @@ class UpdaterArtifactTests(unittest.TestCase):
     def test_rejects_missing_multiple_and_symlink_info_plists(self) -> None:
         cases = (
             app_members(
-                make_member("MacSlim.app/Contents/Resources/placeholder"),
+                make_member("SlimDisk.app/Contents/Resources/placeholder"),
                 extra_directories=(f"{APP_NAME}/Contents/Resources/",),
             ),
             [make_member("First.app/Contents/Info.plist", info_data()), make_member("Second.app/Contents/Info.plist", info_data())],
@@ -371,7 +371,7 @@ class UpdaterArtifactTests(unittest.TestCase):
         for members in cases:
             with self.subTest(names=[str(item.name) for item, _ in members]):
                 write_members(self.archive, members)
-                self.rejection("MacSlim.app|必须包含且只包含一个 app Info.plist")
+                self.rejection("SlimDisk.app|必须包含且只包含一个 app Info.plist")
 
     def test_rejects_malformed_plist_without_leaking_content(self) -> None:
         write_members(self.archive, app_members(make_member(INFO_NAME, b"<plist>" + SENTINEL.encode())))
@@ -383,17 +383,17 @@ class UpdaterArtifactTests(unittest.TestCase):
 
     def test_rejects_wrong_bundle_root(self) -> None:
         write_members(self.archive, [make_member("Evil.app/Contents/Info.plist", info_data())])
-        self.assertNotIn("Evil.app", self.rejection("MacSlim.app"))
+        self.assertNotIn("Evil.app", self.rejection("SlimDisk.app"))
 
     def test_rejects_other_app_members(self) -> None:
-        names = ("Evil.app/Contents/Resources/payload", "MacSlim.app/Contents/Helper.app/Resources/payload")
+        names = ("Evil.app/Contents/Resources/payload", "SlimDisk.app/Contents/Helper.app/Resources/payload")
         for name in names:
             with self.subTest(name=name):
                 write_members(self.archive, app_members(info_member(), make_member(name)))
-                self.rejection("MacSlim.app")
+                self.rejection("SlimDisk.app")
 
     def test_rejects_unsafe_member_paths(self) -> None:
-        names = (f"../{SENTINEL}", f"/{SENTINEL}", f"MacSlim.app/../{SENTINEL}")
+        names = (f"../{SENTINEL}", f"/{SENTINEL}", f"SlimDisk.app/../{SENTINEL}")
         for name in names:
             with self.subTest(name=name):
                 write_members(self.archive, app_members(info_member(), make_member(name)))
@@ -401,12 +401,12 @@ class UpdaterArtifactTests(unittest.TestCase):
 
     def test_rejects_duplicate_and_casefold_members(self) -> None:
         duplicate_info = make_member(INFO_NAME, info_data())
-        variant_info = make_member("MacSlim.app/Contents/info.plist", info_data())
+        variant_info = make_member("SlimDisk.app/Contents/info.plist", info_data())
         cases = (
             ("exact", app_members(info_member(), duplicate_info)),
             ("regular-symlink", app_members(info_member(), make_member(INFO_NAME, member_type=tarfile.SYMTYPE, linkname="Info.plist"))),
             ("casefold", app_members(info_member(), variant_info)),
-            ("unicode", app_members(info_member(), make_member("MacSlim.app/Contents/Café"), make_member("MacSlim.app/Contents/Cafe\u0301"))),
+            ("unicode", app_members(info_member(), make_member("SlimDisk.app/Contents/Café"), make_member("SlimDisk.app/Contents/Cafe\u0301"))),
         )
         for label, members in cases:
             with self.subTest(label=label):
@@ -429,13 +429,13 @@ class UpdaterArtifactTests(unittest.TestCase):
         for members in ([info_member()], [root, info_member()]):
             with self.subTest(names=[str(item.name) for item, _ in members]):
                 write_members(self.archive, members)
-                self.rejection("MacSlim.app|祖先")
+                self.rejection("SlimDisk.app|祖先")
 
     def test_rejects_unsafe_symlinks(self) -> None:
         links = ("", f"/{SENTINEL}", f"../../../../{SENTINEL}")
         for linkname in links:
             with self.subTest(linkname=linkname):
-                name = f"MacSlim.app/Contents/Resources/link-{len(linkname)}"
+                name = f"SlimDisk.app/Contents/Resources/link-{len(linkname)}"
                 member = make_member(name, member_type=tarfile.SYMTYPE, linkname=linkname)
                 directories = (f"{APP_NAME}/Contents/Resources/",)
                 write_members(self.archive, app_members(info_member(), member, extra_directories=directories))
@@ -443,12 +443,12 @@ class UpdaterArtifactTests(unittest.TestCase):
 
     def test_accepts_valid_directory_chain_and_safe_symlink(self) -> None:
         directories = (f"{APP_NAME}/Contents/Resources/", f"{APP_NAME}/Contents/Frameworks/", f"{APP_NAME}/Contents/Frameworks/Shared/")
-        symlink = make_member("MacSlim.app/Contents/Resources/Shared", member_type=tarfile.SYMTYPE, linkname="../Frameworks/Shared")
+        symlink = make_member("SlimDisk.app/Contents/Resources/Shared", member_type=tarfile.SYMTYPE, linkname="../Frameworks/Shared")
         write_members(self.archive, app_members(info_member(), symlink, extra_directories=directories))
         self.inspect()
 
     def test_rejects_unsupported_member_type(self) -> None:
-        pipe = make_member("MacSlim.app/Contents/Resources/pipe", member_type=tarfile.FIFOTYPE)
+        pipe = make_member("SlimDisk.app/Contents/Resources/pipe", member_type=tarfile.FIFOTYPE)
         write_members(self.archive, app_members(info_member(), pipe, extra_directories=(f"{APP_NAME}/Contents/Resources/",)))
         self.rejection("不支持")
 
@@ -459,7 +459,7 @@ class UpdaterArtifactTests(unittest.TestCase):
         payload = json.loads(stamp.read_text(encoding="utf-8"))
         self.assertEqual(stamp, updater_artifact.stamp_path(self.archive))
         self.assertIs(type(payload["schema_version"]), int)
-        self.assertEqual(payload["product"], "MacSlim")
+        self.assertEqual(payload["product"], "SlimDisk")
         self.assertEqual(payload["version"], FIXTURE_VERSION)
         self.assertEqual(payload["target"], TARGET)
         self.assertEqual(payload["identifier"], "com.vgoapp.macslim")
@@ -477,7 +477,7 @@ class UpdaterArtifactTests(unittest.TestCase):
     def test_rejects_tamper_after_stamp(self) -> None:
         make_archive(self.archive)
         write_test_stamp(self.archive, TARGET)
-        tampered = make_member(f"MacSlim.app/Contents/{SENTINEL}")
+        tampered = make_member(f"SlimDisk.app/Contents/{SENTINEL}")
         write_members(self.archive, app_members(info_member(), tampered))
         with self.assertRaisesRegex(ValueError, "校验和"):
             updater_artifact.verify_stamp(self.archive, TARGET)

@@ -96,6 +96,6 @@ jobs:
       - name: 上传 DMG 产物
         uses: actions/upload-artifact@v4
         with:
-          name: macslim-arm64-unsigned
+          name: slimdisk-arm64-unsigned
           path: src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
           retention-days: 14

@@ -31,9 +31,9 @@ case "$TARGET" in
   *) echo "用法: $0 [arm|intel|universal]" >&2; exit 1 ;;
 esac
 
-APP_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/macos/MacSlim.app"
-DMG_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/dmg/MacSlim_${VERSION}_${ARCH}.dmg"
-UPDATER_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/macos/MacSlim.app.tar.gz"
+APP_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/macos/SlimDisk.app"
+DMG_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/dmg/SlimDisk_${VERSION}_${ARCH}.dmg"
+UPDATER_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/macos/SlimDisk.app.tar.gz"
 UPDATER_SIG_PATH="${UPDATER_PATH}.sig"
 UPDATER_STAMP_PATH="${UPDATER_PATH}.build-stamp.json"
 APP_ARCHIVE_PATH="${APP_PATH}.zip"

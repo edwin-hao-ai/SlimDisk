@@ -180,7 +180,7 @@ def validate_updater_contract(tauri: object, publish: str) -> list[str]:
     errors.extend(_validate_publish_updater_gate(publish))
     for marker in (
         ".app.tar.gz",
-        "MacSlim_${VERSION}_${ARCH}.app.tar.gz",
+        "SlimDisk_${VERSION}_${ARCH}.app.tar.gz",
         "latest.json",
         "0.1.0",
         "0.2.2",
@@ -524,7 +524,7 @@ def _updater_path_errors(name: str, content: str) -> list[str]:
     errors = []
     exact_path = (
         'UPDATER_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/macos/'
-        'MacSlim.app.tar.gz"'
+        'SlimDisk.app.tar.gz"'
     )
     if exact_path not in content:
         errors.append(f"{name} 必须精确选择同 target 的 updater archive")
@@ -625,9 +625,9 @@ def validate_release_contracts(files: dict[str, str]) -> list[str]:
     for name, content in (("release.sh", release), ("sign.sh", sign)):
         if "src-tauri/tauri.conf.json" not in content:
             errors.append(f"{name} 必须从 tauri.conf.json 读取 version")
-        if 'DMG_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/dmg/MacSlim_${VERSION}_${ARCH}.dmg"' not in content:
+        if 'DMG_PATH="src-tauri/target/${RUST_TARGET}/release/bundle/dmg/SlimDisk_${VERSION}_${ARCH}.dmg"' not in content:
             errors.append(f"{name} 必须精确选择 version/target 对应的 DMG")
-        if "DMG_PATHS" in content or "MacSlim_*.dmg" in content or "${DMG_PATHS[0]}" in content:
+        if "DMG_PATHS" in content or "SlimDisk_*.dmg" in content or "${DMG_PATHS[0]}" in content:
             errors.append(f"{name} 不得通过 glob 或首项选择 DMG")
     if sign and "$TIMESTAMP_FLAG" not in sign:
         errors.append("sign.sh 必须引用 TIMESTAMP_FLAG")

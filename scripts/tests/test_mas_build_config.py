@@ -247,7 +247,7 @@ class PrivacyManifestTests(unittest.TestCase):
         self.manifest = load_plist("PrivacyInfo.xcprivacy")
 
     def test_declares_no_tracking(self) -> None:
-        # MacSlim 无遥测、无第三方分析 SDK、无数据出本机
+        # SlimDisk 无遥测、无第三方分析 SDK、无数据出本机
         self.assertFalse(self.manifest["NSPrivacyTracking"])
         self.assertEqual(self.manifest["NSPrivacyTrackingDomains"], [])
 
@@ -304,11 +304,11 @@ class MasTargetIsolationTests(unittest.TestCase):
         self.assertIn("target-mas", self.gitignore)
 
     def test_strips_the_cli_that_crashes_under_sandbox(self) -> None:
-        # 实测：带沙箱的 macslim-cli 一起签名后启动即 SIGTRAP，崩溃栈全在
+        # 实测：带沙箱的 slimdisk-cli 一起签名后启动即 SIGTRAP，崩溃栈全在
         # dyld 初始化阶段（_libsecinit_appsandbox → forEachInitializer），
         # 连 `--version` 都打不出来。留着只会被审核拒，且对 App Store 用户无价值。
         self.assertIn("strip_cli", self.script)
-        self.assertIn("macslim-cli", self.script)
+        self.assertIn("slimdisk-cli", self.script)
         # 且必须在签名**之前**执行 —— 删文件改了 bundle，签名要在删完之后做
         strip_at = self.script.find("strip_cli;")
         sign_at = self.script.find("sanitize_info_plist;")
@@ -1639,9 +1639,9 @@ class MasBuildNumberTests(unittest.TestCase):
         而文件名根本不影响 ASC（ASC 只读包内 Info.plist），所以写死它既没好处
         又会在版本变更后给出误导性的产物名。
         """
-        self.assertIn('PKG_PATH="${ZIP_DIST}/MacSlim-$(store_version)-mas.pkg"', self.source)
+        self.assertIn('PKG_PATH="${ZIP_DIST}/SlimDisk-$(store_version)-mas.pkg"', self.source)
         self.assertNotIn(
-            'PKG_PATH="${ZIP_DIST}/MacSlim-1.0.0-mas.pkg"',
+            'PKG_PATH="${ZIP_DIST}/SlimDisk-1.0.0-mas.pkg"',
             self.source,
             "pkg 文件名不该写死版本号",
         )

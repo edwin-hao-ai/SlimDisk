@@ -53,8 +53,8 @@ spec.loader.exec_module(mas)
 APP_ID = os.environ.get("MAS_APP_ID", "6816609940")
 VERSION_ID = os.environ.get("MAS_VERSION_ID", "2c11d65f-fc50-4440-9604-bfe34dd3259f")
 APP_INFO_ID = os.environ.get("MAS_APP_INFO_ID", "16ef238c-95a4-4083-9c4d-09cce0e0fef6")
-SUPPORT_URL = "https://edwin-hao-ai.github.io/MacSlim/support.html"
-PRIVACY_URL = "https://edwin-hao-ai.github.io/MacSlim/privacy.html"
+SUPPORT_URL = "https://edwin-hao-ai.github.io/SlimDisk/support.html"
+PRIVACY_URL = "https://edwin-hao-ai.github.io/SlimDisk/privacy.html"
 COPYRIGHT = "2026 Beijing VGO Co., Ltd."
 
 # ============================================================================
@@ -70,10 +70,10 @@ COPYRIGHT = "2026 Beijing VGO Co., Ltd."
 # - **隐私承诺要和 PrivacyInfo.xcprivacy 一致**：零采集、零网络。
 
 ZH = {
-    "name": "MacSlim",
+    "name": "SlimDisk",
     "subtitle": "看得见的 Mac 空间管家",
     "promotional_text": "系统健康、进程监控、应用体积分析，以及你授权后就能清的缓存。",
-    "description": """MacSlim 是一款只做一件事的 Mac 工具：告诉你空间和资源去哪了，然后把能安全清掉的清掉。
+    "description": """SlimDisk 是一款只做一件事的 Mac 工具：告诉你空间和资源去哪了，然后把能安全清掉的清掉。
 
 实时看清 Mac 的状态
 CPU、内存、磁盘三项实时读数，环形图一眼看出余量。全部在本机计算，不上传任何数据。
@@ -90,7 +90,7 @@ App Store 版受系统沙箱限制，无法删除应用本身（这是平台规�
 缓存清理：授权一次，长期有效
 这一条与别的清理工具不一样，说明白为什么：
 
-App Store 版运行在 macOS 的系统沙箱里，出于平台限制**无法**直接读取你的用户目录 —— 这也是苹果的规定，拿到「完全磁盘访问权限」也不会绕过沙箱。所以 MacSlim 采取的方式是：你在应用内点一下授权，在系统弹出的标准文件选择框里选中想让它清理的目录，之后就长期有效，随时可以撤销。
+App Store 版运行在 macOS 的系统沙箱里，出于平台限制**无法**直接读取你的用户目录 —— 这也是苹果的规定，拿到「完全磁盘访问权限」也不会绕过沙箱。所以 SlimDisk 采取的方式是：你在应用内点一下授权，在系统弹出的标准文件选择框里选中想让它清理的目录，之后就长期有效，随时可以撤销。
 
 授权后可以清理：
 · 应用缓存（~/Library/Caches）
@@ -106,7 +106,7 @@ App Store 版运行在 macOS 的系统沙箱里，出于平台限制**无法**�
 没有账号、没有统计、没有广告、没有第三方 SDK。清理历史与白名单只存在你自己的机器上，删除应用即一并删除。
 
 关于沙箱
-MacSlim 运行在 macOS 的系统沙箱里，因此有两件事它做不到：终止其他进程，以及读取你未授权的目录。这是平台限制，上面列出的每一项功能都不受影响。""",
+SlimDisk 运行在 macOS 的系统沙箱里，因此有两件事它做不到：终止其他进程，以及读取你未授权的目录。这是平台限制，上面列出的每一项功能都不受影响。""",
     "keywords": "mac清理,缓存,磁盘空间,内存,进程监控,应用卸载,xcode,npm缓存,系统监控",
     "whats_new": "首个版本。\n\n· 系统健康实时读数\n· 进程监控（只读）\n· 应用体积分析与卸载\n· 缓存清理：授权一次，长期有效",
     "support_url": SUPPORT_URL,
@@ -115,10 +115,10 @@ MacSlim 运行在 macOS 的系统沙箱里，因此有两件事它做不到：�
 }
 
 EN = {
-    "name": "MacSlim",
+    "name": "SlimDisk",
     "subtitle": "See where your space goes",
     "promotional_text": "System health, process monitoring, app sizes, and cache cleaning for the folders you authorize.",
-    "description": """MacSlim does one thing well: it shows you where your space and resources actually go, then removes what is safe to remove.
+    "description": """SlimDisk does one thing well: it shows you where your space and resources actually go, then removes what is safe to remove.
 
 Live system health
 Real-time readings for CPU, memory and disk, with ring gauges that show the headroom at a glance. Everything is computed on your Mac; nothing is uploaded.
@@ -135,9 +135,9 @@ The App Store edition runs inside the macOS sandbox and cannot remove apps — a
 Cache cleaning: authorize once, valid for good
 This part works differently from other cleaners, and here is why:
 
-The App Store edition runs inside the macOS system sandbox and, by platform design, **cannot** read your user folders directly — Apple's own rules mean that even Full Disk Access does not lift the sandbox. So MacSlim asks: tap authorize, pick the folder in the standard macOS file dialog, and it stays valid until you revoke it.
+The App Store edition runs inside the macOS system sandbox and, by platform design, **cannot** read your user folders directly — Apple's own rules mean that even Full Disk Access does not lift the sandbox. So SlimDisk asks: tap authorize, pick the folder in the standard macOS file dialog, and it stays valid until you revoke it.
 
-Once authorized, MacSlim can clean:
+Once authorized, SlimDisk can clean:
 · App caches (~/Library/Caches)
 · App logs (~/Library/Logs)
 · Xcode build cache
@@ -151,7 +151,7 @@ Entirely on your Mac
 No account, no analytics, no ads, no third-party SDKs. Cleanup history and your whitelist never leave your machine, and deleting the app deletes them.
 
 About the sandbox
-MacSlim runs inside the macOS system sandbox, which means two things it cannot do: terminate other apps, and read folders you have not authorized. That is a platform limit, and everything listed above is unaffected.""",
+SlimDisk runs inside the macOS system sandbox, which means two things it cannot do: terminate other apps, and read folders you have not authorized. That is a platform limit, and everything listed above is unaffected.""",
     "keywords": "mac cleaner,cache,disk space,memory,process monitor,uninstaller,xcode,npm cache",
     "whats_new": "First release.\n\n· Live system health\n· Process monitoring (read-only)\n· App size analysis and uninstaller\n· Cache cleaning: authorize once, valid for good",
     "support_url": SUPPORT_URL,
@@ -357,7 +357,7 @@ def privacy_text(locale: str) -> str:
     # 纯文本版（Apple 的表单接受纯文本 / 不接受 HTML）
     if locale == "zh-Hans":
         return (
-            "MacSlim 不采集任何数据，也不把任何东西传出你的 Mac。"
+            "SlimDisk 不采集任何数据，也不把任何东西传出你的 Mac。"
             "没有账号、没有统计、没有崩溃上报、没有广告 SDK、没有第三方分析。\n\n"
             "清理历史与白名单保存在应用自己的沙箱容器内，仅本机可见，删除应用即一并删除。\n\n"
             "App Store 版运行在系统沙箱内，只读取你亲手授权的目录。授权记录是一份 "
@@ -367,10 +367,10 @@ def privacy_text(locale: str) -> str:
             "macOS 规定沙箱应用即使获得完全磁盘访问权限，仍受沙箱自身限制。"
             "因此本应用不要求你授予完全磁盘访问权限，也不需要修改任何系统隐私设置。\n\n"
             "本应用不集成任何第三方 SDK。\n\n"
-            "完整政策：https://edwin-hao-ai.github.io/MacSlim/privacy.html"
+            "完整政策：https://edwin-hao-ai.github.io/SlimDisk/privacy.html"
         )
     return (
-        "MacSlim does not collect any data and does not send anything off your Mac. "
+        "SlimDisk does not collect any data and does not send anything off your Mac. "
         "No account, no analytics, no crash reporting, no ad SDKs, no third-party analytics.\n\n"
         "Cleanup history and your whitelist are stored inside the app's own sandbox "
         "container, are visible only on this Mac, and are deleted with the app.\n\n"
@@ -381,10 +381,10 @@ def privacy_text(locale: str) -> str:
         "You can revoke it at any time. We do not store or upload anything inside the "
         "folders you authorize.\n\n"
         "macOS requires sandboxed apps to keep their own file restrictions even with Full "
-        "Disk Access. MacSlim therefore never asks for Full Disk Access and never asks you "
+        "Disk Access. SlimDisk therefore never asks for Full Disk Access and never asks you "
         "to change any system privacy setting.\n\n"
         "No third-party SDKs are integrated.\n\n"
-        "Full policy: https://edwin-hao-ai.github.io/MacSlim/privacy.html"
+        "Full policy: https://edwin-hao-ai.github.io/SlimDisk/privacy.html"
     )
 
 
@@ -496,7 +496,7 @@ def set_age_rating(env: dict, dry: bool) -> None:
     `ageRatingDeclarations`，而那个资源要求**整份问卷一个不漏** ——
     少一个就 409，且一次只告诉你缺哪一个。
 
-    全填「否」即 4+：MacSlim 是系统工具，不含任何这类内容。
+    全填「否」即 4+：SlimDisk 是系统工具，不含任何这类内容。
     `ageRatingOverride` 填 `"NONE"` 表示「不用覆盖，按问卷结果算」。
     """
     if dry:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MacSlim e2e 门禁的观察通道与窗口驱动（`scripts/e2e_gui.py` 的底层）。
+"""SlimDisk e2e 门禁的观察通道与窗口驱动（`scripts/e2e_gui.py` 的底层）。
 
 三件事：
 
@@ -43,12 +43,12 @@ REPO = Path(__file__).resolve().parents[1]
 ARTIFACTS = REPO / "artifacts" / "e2e"
 OSA_DIR = ARTIFACTS / ".osa"
 
-APP_PROCESS = "macslim"
-DEBUG_APP = Path.home() / ".cargo/shared-target/debug/bundle/macos/MacSlim.app"
-DB_PATH = Path.home() / "Library/Application Support/MacSlim/macslim.db"
+APP_PROCESS = "slimdisk"
+DEBUG_APP = Path.home() / ".cargo/shared-target/debug/bundle/macos/SlimDisk.app"
+DB_PATH = Path.home() / "Library/Application Support/SlimDisk/slimdisk.db"
 
-SAC_CACHE_PREFIX = "macslim-e2e-sac-"
-SAC_APP_PREFIX = "MacSlimE2E-"
+SAC_CACHE_PREFIX = "slimdisk-e2e-sac-"
+SAC_APP_PREFIX = "SlimDiskE2E-"
 SAC_APPS_DIR = Path.home() / "Applications"
 
 # 窗口归一化目标坐标。每次交互前都重设 —— 开发中真实踩过「窗口实际在 (281,138)
@@ -71,7 +71,7 @@ NAV_LABELS = (
     "设置",
 )
 
-# 承载系统模态对话框的进程。它们在前台时必然盖住 MacSlim 窗口，且会静默吃掉
+# 承载系统模态对话框的进程。它们在前台时必然盖住 SlimDisk 窗口，且会静默吃掉
 # 所有合成点击 —— 见 `App.assert_no_overlay`。
 OVERLAY_PROCESSES = frozenset({"UserNotificationCenter", "SecurityAgent", "CoreServicesUIAgent"})
 
@@ -602,7 +602,7 @@ class Ax:
 
 
 class App:
-    """MacSlim 窗口驱动。"""
+    """SlimDisk 窗口驱动。"""
 
     def __init__(self, ax: Ax, shot_prefix: str = "shot") -> None:
         self.ax = ax
@@ -615,7 +615,7 @@ class App:
             self.wait_ax_ready()
             return
         if not launch:
-            raise SkipCheck("MacSlim 未运行（--no-launch 时不自动拉起）")
+            raise SkipCheck("SlimDisk 未运行（--no-launch 时不自动拉起）")
         if not DEBUG_APP.exists():
             raise SkipCheck(f"找不到 debug bundle: {DEBUG_APP}")
         subprocess.run(["open", str(DEBUG_APP)], check=False, timeout=30)
@@ -629,7 +629,7 @@ class App:
         self.wait_ax_ready()
 
     def restart(self) -> None:
-        """重启 MacSlim，并等 WebView 的 AX 树就绪。
+        """重启 SlimDisk，并等 WebView 的 AX 树就绪。
 
         为什么需要：后端的应用列表有 **600 秒缓存**（`app_scanner.rs:288`
         `APP_SCAN_CACHE_TTL`）。自造 app 是在缓存建立之后造出来的，进程不重启
@@ -642,17 +642,17 @@ class App:
         走正常退出路径 —— `kill` 会留下未落盘的偏好设置。
         """
         pid = self.ax.pid()
-        osa('tell application "MacSlim" to quit', timeout=20)
+        osa('tell application "SlimDisk" to quit', timeout=20)
         for _ in range(40):
             time.sleep(0.5)
             current = self.ax.pid()
             if current in (-1, 0) or current != pid:
                 break
         else:
-            raise SkipCheck(f"quit 之后 20s 内 MacSlim 仍在（pid={pid}）")
+            raise SkipCheck(f"quit 之后 20s 内 SlimDisk 仍在（pid={pid}）")
         if self.ax.alive():
             raise SkipCheck(
-                f"MacSlim 仍有 AX 记录（pid={self.ax.pid()}），"
+                f"SlimDisk 仍有 AX 记录（pid={self.ax.pid()}），"
                 "可能还有别的实例在跑，重启会打断别的检查项"
             )
         subprocess.run(["open", str(DEBUG_APP)], check=False, timeout=30)
@@ -661,7 +661,7 @@ class App:
             if self.ax.pid() not in (-1, pid):
                 break
         else:
-            raise SkipCheck("quit + open 之后 30s 内 MacSlim 没回来")
+            raise SkipCheck("quit + open 之后 30s 内 SlimDisk 没回来")
         self.normalize_window()
         self.wait_ax_ready()
 
@@ -681,16 +681,16 @@ class App:
                 return
             time.sleep(0.5)
         raise SkipCheck(
-            f"MacSlim 进程在，但 WebView 的 AX 树 {timeout:.0f}s 内没就绪"
+            f"SlimDisk 进程在，但 WebView 的 AX 树 {timeout:.0f}s 内没就绪"
             f"（当前 P_WEB = {self.ax.node(P_WEB, fresh=True).describe()}）。"
             "通常是启动画面还没切走，或被系统弹窗/权限对话框挡住。"
         )
 
     def assert_no_overlay(self) -> None:
-        """确认没有系统弹窗压在 MacSlim 窗口上。
+        """确认没有系统弹窗压在 SlimDisk 窗口上。
 
         实测踩过：系统弹出「某 app 想访问你的提醒事项」权限对话框时，它浮在
-        MacSlim 之上，`cliclick` 与 `AXPress` 的坐标全部落到对话框上，**点击
+        SlimDisk 之上，`cliclick` 与 `AXPress` 的坐标全部落到对话框上，**点击
         静默失效** —— 脚本会一路跑到超时，然后报「点了两次侧栏都没切过去」，
         把环境问题伪装成产品缺陷。这里显式检测并立刻停下。
 
@@ -700,7 +700,7 @@ class App:
         front = self.ax.frontmost()
         if front in OVERLAY_PROCESSES:
             raise SkipCheck(
-                f"系统弹窗进程「{front}」在前台，正盖住 MacSlim 窗口："
+                f"系统弹窗进程「{front}」在前台，正盖住 SlimDisk 窗口："
                 "合成点击会被它吃掉。请先手动处理该弹窗再重跑本项。"
             )
 
@@ -714,7 +714,7 @@ class App:
             timeout=12.0,
         )
         if not out:
-            raise SkipCheck("无法置顶 / 归一化 MacSlim 窗口（辅助功能权限？）")
+            raise SkipCheck("无法置顶 / 归一化 SlimDisk 窗口（辅助功能权限？）")
         head, _, size = out.partition(" ")
         x, y = _pair(head)
         w, h = _pair(size)
@@ -746,7 +746,7 @@ class App:
 
         合成点击有时只把窗口激活、没把焦点交给输入框，随后 `t:` 就会把字符
         打进**别的 app**（实测踩过：焦点落到 Terminal，字符被当成快捷键）。
-        所以这里死磕 `AXFocused=true`，并且每轮之前都确认前台就是 MacSlim。
+        所以这里死磕 `AXFocused=true`，并且每轮之前都确认前台就是 SlimDisk。
         """
         for _ in range(4):
             self.normalize_window()
@@ -955,10 +955,10 @@ def spawn_sacrifice_sleep(seconds: int = 1800) -> tuple[subprocess.Popen, str]:
        回绕（实测已回绕到三位数），短 PID 会同时命中一堆进程，列表收窄不下去，
        AX 树随即在多行渲染下阻塞。改用唯一可执行文件名搜索，命中必然只有 1 行。
     2. **名字只用数字。** `cliclick t:` 是合成键盘事件，会被当前输入法接管：
-       实测输入 "macslim-…" 落进输入框的是「嘛超市里面-😑额-…」这种拼音候选。
+       实测输入 "slimdisk-…" 落进输入框的是「嘛超市里面-😑额-…」这种拼音候选。
        数字则原样送达。10 位随机数还天然不可能是 PID（≤5 位）或端口的子串。
     """
-    bin_dir = Path(tempfile.gettempdir()) / f"macslim-e2e-bin-{uuid.uuid4().hex[:8]}"
+    bin_dir = Path(tempfile.gettempdir()) / f"slimdisk-e2e-bin-{uuid.uuid4().hex[:8]}"
     bin_dir.mkdir(parents=True, exist_ok=True)
     name = f"{random.SystemRandom().randrange(10**9, 10**10)}"
     link = bin_dir / name
@@ -973,7 +973,7 @@ def spawn_sacrifice_sleep(seconds: int = 1800) -> tuple[subprocess.Popen, str]:
 
 
 def cleanup_sacrifice_bin(name: str) -> None:
-    for parent in Path(tempfile.gettempdir()).glob("macslim-e2e-bin-*"):
+    for parent in Path(tempfile.gettempdir()).glob("slimdisk-e2e-bin-*"):
         if (parent / name).exists():
             shutil.rmtree(parent, ignore_errors=True)
 
@@ -1066,7 +1066,7 @@ def make_sacrificial_app(tag: str) -> Path:
 
     **随机后缀是纯数字**（10 位），不是 hex。原因：卸载列表按体积降序排，自造 app
     只有几百 KB、一定落在滚动区外，要靠搜索框过滤才看得见；而 `cliclick t:` 是
-    合成键盘事件，会被当前输入法接管 —— 实测把 `MacSlimE2E-residue-efcb8846` 打
+    合成键盘事件，会被当前输入法接管 —— 实测把 `SlimDiskE2E-residue-efcb8846` 打
     进输入框的是「马超里SMEE-residue-而非拆吧8'8」这种拼音候选。数字原样送达。
     与 `spawn_sacrifice_sleep` 用数字后缀是同一个坑，两处都留了注释。
     """
@@ -1076,12 +1076,12 @@ def make_sacrificial_app(tag: str) -> Path:
     macos = bundle / "Contents" / "MacOS"
     macos.mkdir(parents=True)
     (bundle / "Contents" / "Resources").mkdir(parents=True)
-    ident = f"com.macslim.e2e.{tag}.{uuid.uuid4().hex[:8]}"
+    ident = f"com.slimdisk.e2e.{tag}.{uuid.uuid4().hex[:8]}"
     (bundle / "Contents" / "Info.plist").write_text(_info_plist(name, ident), encoding="utf-8")
     exe = macos / name
     exe.write_text(
         "#!/bin/sh\n"
-        "# MacSlim e2e 门禁自造的牺牲 app：只 sleep，绝不碰用户数据。\n"
+        "# SlimDisk e2e 门禁自造的牺牲 app：只 sleep，绝不碰用户数据。\n"
         "while true; do sleep 3600; done\n",
         encoding="utf-8",
     )
@@ -1092,7 +1092,7 @@ def make_sacrificial_app(tag: str) -> Path:
 def app_search_term(bundle: Path) -> str:
     """从自造 app 的 bundle 名里取出**末段纯数字**，作为卸载页的搜索词。
 
-    名字形如 `MacSlimE2E-residue-7943722234.app`，末段是 `7943722234`。
+    名字形如 `SlimDiskE2E-residue-7943722234.app`，末段是 `7943722234`。
 
     两个坑：
 
@@ -1102,7 +1102,7 @@ def app_search_term(bundle: Path) -> str:
        `name.toLowerCase().includes(q)`（`UninstallerView.tsx:130`），拼起来的
        串永远匹配不上（开发中实测：过滤后「未找到可卸载的应用」）。
     2. **必须纯数字。** `cliclick t:` 是合成键盘事件，会被当前输入法接管 ——
-       实测把 `MacSlimE2E-residue-efcb8846` 打进输入框的是「马超里SMEE-residue-
+       实测把 `SlimDiskE2E-residue-efcb8846` 打进输入框的是「马超里SMEE-residue-
        而非拆吧8'8」这种拼音候选。数字原样送达。与 `spawn_sacrifice_sleep`
        用数字后缀是同一个坑，两处都留了注释。
     """

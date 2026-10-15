@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MacSlim e2e 门禁的只读功能（第 13-17 项）与发布指标（第 18-21 项）。"""
+"""SlimDisk e2e 门禁的只读功能（第 13-17 项）与发布指标（第 18-21 项）。"""
 from __future__ import annotations
 
 import subprocess
@@ -51,10 +51,10 @@ def check_13(app: App) -> CheckResult:
         seen[label] = round(app.wait_heading(label, timeout=15.0), 2)
         shots.append(app.screenshot(f"nav-{len(seen):02d}-{label}"))
         if app.ax.pid() != pid_before:
-            raise CheckFailure(f"打开「{label}」后 MacSlim 进程变了（疑似崩溃重启）")
+            raise CheckFailure(f"打开「{label}」后 SlimDisk 进程变了（疑似崩溃重启）")
     app.normalize_window()
     if not drv.pid_alive(pid_before):
-        raise CheckFailure("跑完 7 个页面后 MacSlim 不存活")
+        raise CheckFailure("跑完 7 个页面后 SlimDisk 不存活")
     return ok(
         check_13,
         "7 个页面标题全部命中，进程 PID 未变",
@@ -416,7 +416,7 @@ def _settle_and_get_pid(app: App) -> int:
     app.wait_heading("智能扫描")
     pid = app.ax.pid()
     if pid <= 0:
-        raise SkipCheck("拿不到 MacSlim PID")
+        raise SkipCheck("拿不到 SlimDisk PID")
     time.sleep(3.0)
     return pid
 
