@@ -104,7 +104,12 @@
   }
 }
 
-@custom-variant dark (&:where(.dark, .dark *));
+/* 深色模式必须由 prefers-color-scheme 驱动（跟随系统，见 AGENTS §3.1）。
+ * 切勿在此写 `@custom-variant dark (&:where(.dark, .dark *))`：那会把 dark:
+ * 工具类改成只认 .dark class，而全工程从不加 .dark —— 结果本文件里的
+ * @media (prefers-color-scheme: dark) 规则照常生效，dark: 工具类却全部失效，
+ * 深色下输入框白底 + 继承到近白文字色 = 文字完全看不见（App Store 2.1a 拒审）。
+ * 回归门禁见 scripts/tests/test_dark_mode.py。 */
 
 /* Tailwind v4: content detection is automatic via @source, but we can be explicit if needed */
 @source "./**/*.{ts,tsx,html}";
