@@ -1,0 +1,11 @@
+{
+  "version": "1.0.2",
+  "notes": "品牌更名 SlimDisk（去 Mac 商标）+ 深色模式文字可见性修复",
+  "pub_date": "2026-10-16T03:38:27Z",
+  "platforms": {
+    "darwin-aarch64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTUjh1SU5TY251cGIxUVQvWDhGYjlYQmFDekh6QmpMK3pZMFJjdjR0NTcvenRtK0ZHMm11M2ZPKzE4eUZuTk9NQXE4VFU1K1V4ekl6OGtVc3hCcTNqZGhtazNCUVArcGd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyMTIxODE3CWZpbGU6U2xpbURpc2suYXBwLnRhci5negp6ZTlpM3Z1bTNJdjF5QS84aGN5Q0kwbkJZNXJMM3BVZ0JsTnM1Z2tzSHFuLzFwZUFveUZUaVJTcFUrNUxmZi9HNytTL1pNRWI0OGhxNTJaQVFHNnhEQT09Cg==",
+      "url": "https://github.com/edwin-hao-ai/SlimDisk/releases/download/v1.0.2/SlimDisk_1.0.2_aarch64.app.tar.gz"
+    }
+  }
+}

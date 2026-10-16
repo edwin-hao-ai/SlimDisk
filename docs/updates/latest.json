@@ -1,11 +1,11 @@
 {
-  "version": "1.0.1",
-  "notes": "诚实清理报告 + 缓存页安全筛选；清理结果区分实测释放与已删除未测量",
-  "pub_date": "2026-10-09T07:50:23Z",
+  "version": "1.0.2",
+  "notes": "品牌更名 SlimDisk（去 Mac 商标）+ 深色模式文字可见性修复",
+  "pub_date": "2026-10-16T03:38:27Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTUjh1SU5TY251cGU2L3JZT0tBam9aWk95TFhjVWJUNWthOTRZd25waW5pT3JhM1BUWnMyUXlVNy9JLzU1TGYxazZVd0FMRndsTzNHZnY3K2ZTeFd3REU5QUtzZkdySkFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxNTMyMjIzCWZpbGU6TWFjU2xpbV8xLjAuMV9hYXJjaDY0LmFwcC50YXIuZ3oKU1hCQ2xXbTIzQkcrNUxNc25nWThFN0lnQ2FsK2FsWVhxTzBHMlZtRGZmUk9IbDVBdE5xRnpFRzlPODF0bDY2UVlpSk9SNDk4Q3hIZGpaT1pSU1ZVRHc9PQo=",
-      "url": "https://github.com/edwin-hao-ai/MacSlim/releases/download/v1.0.1/MacSlim_1.0.1_aarch64.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTUjh1SU5TY251cGIxUVQvWDhGYjlYQmFDekh6QmpMK3pZMFJjdjR0NTcvenRtK0ZHMm11M2ZPKzE4eUZuTk9NQXE4VFU1K1V4ekl6OGtVc3hCcTNqZGhtazNCUVArcGd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyMTIxODE3CWZpbGU6U2xpbURpc2suYXBwLnRhci5negp6ZTlpM3Z1bTNJdjF5QS84aGN5Q0kwbkJZNXJMM3BVZ0JsTnM1Z2tzSHFuLzFwZUFveUZUaVJTcFUrNUxmZi9HNytTL1pNRWI0OGhxNTJaQVFHNnhEQT09Cg==",
+      "url": "https://github.com/edwin-hao-ai/SlimDisk/releases/download/v1.0.2/SlimDisk_1.0.2_aarch64.app.tar.gz"
     }
   }
 }
